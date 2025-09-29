@@ -176,7 +176,12 @@
                         </div>
                         <?php endif; ?>
                         
-                        <button type="submit" class="btn btn-success w-100">Registrarse</button>
+                        <div class="d-flex gap-2">
+                            <a href="<?= BASE_URL ?>/dashboard" class="btn btn-secondary w-100">
+                                <i class="fas fa-arrow-left me-2"></i>Volver al Panel
+                            </a>
+                            <button type="submit" class="btn btn-success w-100">Registrarse</button>
+                        </div>
                     </form>
                     
                 </div>

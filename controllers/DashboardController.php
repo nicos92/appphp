@@ -69,5 +69,114 @@ class DashboardController extends Controller {
         
         $this->view('dashboard/usuarios', $data);
     }
+    
+    public function editarUsuario($id) {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        // Solo usuarios con rol de administrador pueden editar usuarios
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        $stmt = $this->usuarioModel->getConnection()->prepare("
+            SELECT u.*, r.nombre_rol
+            FROM usuarios u
+            LEFT JOIN roles r ON u.id_rol = r.id_rol
+            WHERE u.id_usuario = ?
+        ");
+        $stmt->execute([$id]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$usuario) {
+            $this->redirect('dashboard/usuarios');
+            return;
+        }
+        
+        $data = [
+            'username' => $_SESSION['username'],
+            'role' => $_SESSION['role'],
+            'usuario' => $usuario
+        ];
+        
+        $this->view('dashboard/editar_usuario', $data);
+    }
+    
+    public function actualizarUsuario($id) {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        // Solo usuarios con rol de administrador pueden actualizar usuarios
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        $usuarioData = [
+            'id' => $id,
+            'firstName' => trim($_POST['firstName']),
+            'lastName' => trim($_POST['lastName']),
+            'email' => trim($_POST['email']),
+            'username' => trim($_POST['username']),
+            'legajo' => trim($_POST['legajo']),
+            'department' => $_POST['department'],
+            'idRol' => (int)($_POST['idRol'] ?? 2),
+            'activo' => isset($_POST['activo']) ? 1 : 0
+        ];
+
+        // Validaciones...
+        if (empty($usuarioData['firstName']) || empty($usuarioData['lastName']) || 
+            empty($usuarioData['email']) || empty($usuarioData['username']) || empty($usuarioData['legajo'])) {
+            $this->redirect('dashboard/editar_usuario/' . $id . '?error=empty_fields');
+            return;
+        }
+
+        if (!filter_var($usuarioData['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->redirect('dashboard/editar_usuario/' . $id . '?error=invalid_email');
+            return;
+        }
+
+        // Verificar si el email o username ya están siendo usados por otro usuario
+        $existingUserStmt = $this->usuarioModel->getConnection()->prepare("
+            SELECT id_usuario FROM usuarios WHERE (email = ? OR username = ?) AND id_usuario != ?
+        ");
+        $existingUserStmt->execute([$usuarioData['email'], $usuarioData['username'], $usuarioData['id']]);
+        $existingUser = $existingUserStmt->fetch();
+        
+        if ($existingUser) {
+            $this->redirect('dashboard/editar_usuario/' . $id . '?error=user_exists');
+            return;
+        }
+
+        $stmt = $this->usuarioModel->getConnection()->prepare("
+            UPDATE usuarios 
+            SET first_name = ?, last_name = ?, email = ?, username = ?, legajo = ?, 
+                department = ?, id_rol = ?, activo = ?
+            WHERE id_usuario = ?
+        ");
+        
+        $result = $stmt->execute([
+            $usuarioData['firstName'],
+            $usuarioData['lastName'],
+            $usuarioData['email'],
+            $usuarioData['username'],
+            $usuarioData['legajo'],
+            $usuarioData['department'],
+            $usuarioData['idRol'],
+            $usuarioData['activo'],
+            $usuarioData['id']
+        ]);
+        
+        if ($result) {
+            $this->redirect('dashboard/usuarios?success=usuario_actualizado');
+        } else {
+            $this->redirect('dashboard/editar_usuario/' . $id . '?error=update_failed');
+        }
+    }
 }
 

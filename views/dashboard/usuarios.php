@@ -41,6 +41,7 @@
                             <th>Rol</th>
                             <th>Estado</th>
                             <th>Fecha de Registro</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,11 +67,16 @@
                                         <?php endif; ?>
                                     </td>
                                     <td><?= htmlspecialchars($usuario['created_at']); ?></td>
+                                    <td>
+                                        <a href="<?= BASE_URL ?>/dashboard/editar_usuario/<?= htmlspecialchars($usuario['id_usuario']); ?>" class="btn btn-sm btn-outline-primary" title="Editar usuario">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="9" class="text-center text-muted">No hay usuarios registrados aún.</td>
+                                <td colspan="10" class="text-center text-muted">No hay usuarios registrados aún.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

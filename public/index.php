@@ -66,6 +66,12 @@ if ($uri === '/' || $uri === '' || $uri === '/public') {
 } elseif ($uri === '/dashboard/usuarios' && isset($_SESSION['user_logged_in'])) {
     $controller = new DashboardController();
     $controller->usuarios();
+} elseif (preg_match('/^\/dashboard\/editar_usuario\/(\d+)$/', $uri, $matches) && isset($_SESSION['user_logged_in'])) {
+    $controller = new DashboardController();
+    $controller->editarUsuario($matches[1]);
+} elseif (preg_match('/^\/dashboard\/actualizar_usuario\/(\d+)$/', $uri, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_logged_in'])) {
+    $controller = new DashboardController();
+    $controller->actualizarUsuario($matches[1]);
 } else {
     // Página no encontrada
     http_response_code(404);
