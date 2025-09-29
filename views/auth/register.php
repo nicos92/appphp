@@ -1,29 +1,29 @@
 <?php if (isset($_SESSION['username'])): ?>
-<header class="form-header">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1 class="mb-0"><i class="fas fa-cubes me-2"></i>Sistema de Inventario</h1>
-            </div>
-            <div class="col-md-4 text-md-end">
-                <span class="me-3">Bienvenido, <strong><?= htmlspecialchars($_SESSION['username'] ?? ''); ?></strong></span>
-                <a href="<?= BASE_URL ?>/auth/logout" class="btn logout-btn text-white">
-                    <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
-                </a>
+    <header class="form-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-0"><i class="fas fa-cubes me-2"></i>Sistema de Inventario</h1>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="me-3">Bienvenido, <strong><?= htmlspecialchars($_SESSION['username'] ?? ''); ?></strong></span>
+                    <a href="<?= BASE_URL ?>/auth/logout" class="btn logout-btn text-white">
+                        <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 <?php else: ?>
-<header class="form-header">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1 class="mb-0"><i class="fas fa-cubes me-2"></i>Sistema de Inventario</h1>
+    <header class="form-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-0"><i class="fas fa-cubes me-2"></i>Sistema de Inventario</h1>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 <?php endif; ?>
 
 <div class="container my-5">
@@ -40,7 +40,7 @@
                             ¡Su cuenta ha sido creada exitosamente! Puede iniciar sesión ahora.
                         </div>
                     <?php endif; ?>
-                    
+
                     <?php if (isset($error)): ?>
                         <div class="alert alert-danger" role="alert">
                             <?php if ($error === 'empty_fields'): ?>
@@ -61,7 +61,7 @@
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
-                    
+
                     <form method="POST" action="<?= BASE_URL ?>/auth/register">
                         <div class="row">
                             <div class="col-md-6">
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <div class="input-group">
@@ -91,7 +91,7 @@
                                 <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="username" class="form-label">Nombre de Usuario</label>
                             <div class="input-group">
@@ -99,7 +99,7 @@
                                 <input type="text" class="form-control" id="username" name="username" required>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="legajo" class="form-label">Número de Legajo</label>
                             <div class="input-group">
@@ -107,7 +107,7 @@
                                 <input type="text" class="form-control" id="legajo" name="legajo" required>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -134,7 +134,14 @@
                                 </div>
                             </div>
                         </div>
-                        
+
+                        <div class="mb-3" id="passwordMatchMessage" style="display: none;">
+                            <div id="passwordDivMessage" class="alert alert-info alert-danger" role="alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <span id="passwordMatchText"></span>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="department" class="form-label">Departamento</label>
                             <div class="input-group">
@@ -150,33 +157,33 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <?php if (isset($role) && $role === 'administrador'): ?>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="idRol" class="form-label">Rol de Usuario</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
-                                    <select class="form-select" id="idRol" name="idRol" required>
-                                        <option value="2" selected>Producción (Acceso limitado)</option>
-                                        <option value="3">Jefe de Producción (Gestión de tarimas)</option>
-                                        <option value="1">Administrador (Acceso completo)</option>
-                                    </select>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="idRol" class="form-label">Rol de Usuario</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                        <select class="form-select" id="idRol" name="idRol" required>
+                                            <option value="2" selected>Producción (Acceso limitado)</option>
+                                            <option value="3">Jefe de Producción (Gestión de tarimas)</option>
+                                            <option value="1">Administrador (Acceso completo)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+
+                                <div class="col d-flex align-items-end">
+                                    <div class="form-check mb-3 w-100">
+                                        <input type="checkbox" class="form-check-input" id="activo" name="activo" checked>
+                                        <label class="form-check-label" for="activo">Usuario Activo</label>
+                                    </div>
                                 </div>
                             </div>
-                            
-                        </div>
-                        <div class="row mb-3">
-                            
-                            <div class="col d-flex align-items-end">
-                                <div class="form-check mb-3 w-100">
-                                    <input type="checkbox" class="form-check-input" id="activo" name="activo" checked>
-                                    <label class="form-check-label" for="activo">Usuario Activo</label>
-                                </div>
-                            </div>
-                        </div>
                         <?php endif; ?>
-                        
+
                         <div class="d-flex gap-2">
                             <a href="<?= BASE_URL ?>/dashboard" class="btn btn-secondary w-100">
                                 <i class="fas fa-arrow-left me-2"></i>Volver al Panel
@@ -184,7 +191,7 @@
                             <button type="submit" class="btn btn-success w-100">Registrarse</button>
                         </div>
                     </form>
-                    
+
                 </div>
             </div>
         </div>
@@ -192,18 +199,46 @@
 </div>
 
 <script>
-function togglePassword(fieldId, iconId) {
-    const passwordField = document.getElementById(fieldId);
-    const icon = document.getElementById(iconId);
+    function togglePassword(fieldId, iconId) {
+        const passwordField = document.getElementById(fieldId);
+        const icon = document.getElementById(iconId);
 
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    } else {
-        passwordField.type = 'password';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
     }
-}
+
+    // Función para verificar si las contraseñas coinciden
+    function checkPasswordMatch() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const messageDiv = document.getElementById('passwordMatchMessage');
+        const messageText = document.getElementById('passwordMatchText');
+        const passwordDivMessage = document.getElementById('passwordDivMessage');
+        if (confirmPassword.length > 0) { // Solo mostrar mensaje si hay algo escrito en confirm password
+            if (password === confirmPassword) {
+                passwordDivMessage.className = 'mb-3 alert alert-success';
+                messageText.innerHTML = '<i class="fas fa-check-circle text-success me-2"></i>Las contraseñas coinciden';
+                messageDiv.className = 'mb-3 alert alert-success';
+                messageDiv.style.display = 'block';
+            } else {
+                messageText.innerHTML = '<i class="fas fa-times-circle text-danger me-2"></i>Las contraseñas no coinciden';
+                messageDiv.className = 'mb-3 alert alert-danger';
+                messageDiv.style.display = 'block';
+                passwordDivMessage.className = 'mb-3 alert alert-danger';
+            }
+        } else {
+            messageDiv.style.display = 'none';
+        }
+    }
+
+    // Agregar eventos de escucha a los campos de contraseña
+    document.getElementById('password').addEventListener('input', checkPasswordMatch);
+    document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
 </script>
