@@ -60,6 +60,9 @@ if ($uri === '/' || $uri === '' || $uri === '/public') {
 } elseif ($uri === '/tarimas/guardar' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_logged_in'])) {
     $controller = new TarimaController();
     $controller->guardarTarima();
+} elseif ($uri === '/tarimas' && isset($_SESSION['user_logged_in'])) {
+    $controller = new TarimaController();
+    $controller->listarTarimas();
 } else {
     // Página no encontrada
     http_response_code(404);

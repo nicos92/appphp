@@ -39,8 +39,24 @@ class TarimaController extends Controller {
             'cantidadCajas' => filter_var(trim($_POST['cantidadCajas']), FILTER_VALIDATE_INT) ? (int)$_POST['cantidadCajas'] : 0,
             'peso' => filter_var(trim($_POST['peso']), FILTER_VALIDATE_FLOAT) ? (float)$_POST['peso'] : 0,
             'numeroVenta' => filter_var(trim($_POST['numeroVenta']), FILTER_SANITIZE_STRING),
-            'descripcion' => filter_var(trim($_POST['descripcion']), FILTER_SANITIZE_STRING)
+            'descripcion' => filter_var(trim($_POST['descripcion']), FILTER_SANITIZE_STRING),
+            'idUsuario' => $_SESSION['user_id'] // Agregar el ID del usuario que inició sesión
         ];
+
+        // Si el peso no está definido o es 0, intentar extraerlo de los últimos 6 dígitos del código de barras
+        if ($tarimaData['peso'] == 0 && !empty($tarimaData['codigoBarras'])) {
+            $codigoBarras = $tarimaData['codigoBarras'];
+            if (strlen($codigoBarras) >= 6) {
+                // Extraer los últimos 6 dígitos
+                $lastSixDigits = substr($codigoBarras, -6);
+                
+                // Los primeros 4 dígitos son la parte entera, los últimos 2 son decimales
+                $wholePart = substr($lastSixDigits, 0, 4);
+                $decimalPart = substr($lastSixDigits, 4, 2);
+                
+                $tarimaData['peso'] = (float)($wholePart . '.' . $decimalPart);
+            }
+        }
 
         // Validate required fields
         if (empty($tarimaData['codigoBarras']) || empty($tarimaData['numeroTarima'])) {
@@ -54,5 +70,20 @@ class TarimaController extends Controller {
             $this->redirect('tarimas/nueva_tarima?error=save_failed');
         }
     }
+    
+    public function listarTarimas() {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        $tarimas = $this->tarimaModel->getLastTarimas(1000);
+        
+        $data = [
+            'username' => $_SESSION['username'],
+            'tarimas' => $tarimas
+        ];
+        
+        $this->view('tarimas/listar_tarimas', $data);
+    }
 }
-?>

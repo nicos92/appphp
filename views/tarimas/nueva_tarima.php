@@ -258,16 +258,16 @@
             document.getElementById('numeroTarima').value = userPart1;
             
             // For numeroUsuario (2 digits max): use first 2 digits of userPart2
-            document.getElementById('numeroUsuario').value = userPart2.substring(0, 2);
+            document.getElementById('numeroUsuario').value = userPart2.substring(2, 4);
             
             // For cantidadCajas (3 digits max): use positions 2-4 of userPart2 (positions 19-21 of barcode)
-            document.getElementById('cantidadCajas').value = userPart2.substring(2, 5);
+            document.getElementById('cantidadCajas').value = userPart2.substring(4, 7);
             
-            // For peso: use positions 5-7 of userPart2 (positions 22-24 of barcode) formatted as decimal
-            const pesoValue = userPart2.substring(5, 8);
-            if (pesoValue.length === 3) {
-                const wholePart = pesoValue.substring(0, 1);
-                const decimalPart = pesoValue.substring(1, 3);
+            // For peso: use the last 6 digits of the barcode (positions 24-29), 4 for whole part and 2 for decimal
+            const lastSixDigits = value.substring(24, 30); // positions 24-29 (last 6 digits)
+            if (lastSixDigits.length === 6) {
+                const wholePart = lastSixDigits.substring(0, 4); // first 4 digits
+                const decimalPart = lastSixDigits.substring(4, 6); // last 2 digits
                 document.getElementById('peso').value = wholePart + '.' + decimalPart;
             }
             

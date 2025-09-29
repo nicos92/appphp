@@ -46,8 +46,8 @@
                         <i class="fas fa-box fa-2x text-primary"></i>
                     </div>
                     <h5 class="mb-2">Inventario</h5>
-                    <p class="text-muted">Gestia productos y stock</p>
-                    <a href="#" class="btn btn-outline-primary btn-sm">Ver más</a>
+                    <p class="text-muted">Gestiona productos y stock</p>
+                    <a href="<?= BASE_URL ?>/tarimas" class="btn btn-outline-primary btn-sm">Ver más</a>
                 </div>
             </div>
         </div>
@@ -144,20 +144,12 @@
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
-                        <div class="display-4 fw-bold text-primary">1,248</div>
-                        <p class="text-muted">Entidades Registradas</p>
-                    </div>
-                    <div class="text-center mb-4">
-                        <div class="display-4 fw-bold text-success">342</div>
-                        <p class="text-muted">Entidades Editadas</p>
-                    </div>
-                    <div class="text-center mb-4">
-                        <div class="display-4 fw-bold text-warning">89</div>
-                        <p class="text-muted">Tarimas Activas</p>
+                        <div class="display-4 fw-bold text-primary"><?= number_format($total_tarimas ?? 0); ?></div>
+                        <p class="text-muted">Tarimas Registradas</p>
                     </div>
                     <div class="text-center">
-                        <div class="display-4 fw-bold text-info">42</div>
-                        <p class="text-muted">Usuarios Activos</p>
+                        <div class="display-4 fw-bold text-info"><?= number_format($total_usuarios ?? 0); ?></div>
+                        <p class="text-muted">Usuarios Registrados</p>
                     </div>
                 </div>
             </div>

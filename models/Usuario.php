@@ -29,9 +29,14 @@ class Usuario {
     }
 
     public function exists($username, $email) {
-        $stmt = $this->db->prepare("SELECT id FROM usuarios WHERE username = ? OR email = ?");
+        $stmt = $this->db->prepare("SELECT id_usuario FROM usuarios WHERE username = ? OR email = ?");
         $stmt->execute([$username, $email]);
         return $stmt->fetch() !== false;
     }
+    
+    public function getTotalUsuarios() {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM usuarios");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
 }
-?>
