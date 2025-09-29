@@ -21,25 +21,28 @@ class DashboardController extends Controller {
             return;
         }
         
-        // Solo usuarios con rol de administrador pueden ver el panel completo
+        // Verificar si el usuario tiene permiso para ver el panel completo
         if (!$this->hasRole('administrador')) {
-            $this->redirect('tarimas/listar_tarimas');
-            return;
+            // Los usuarios de producción pueden ver el dashboard pero con acceso limitado
         }
         
         // Obtener estadísticas de tarimas
         $totalTarimas = $this->tarimaModel->getTotalTarimas();
         $tarimasActivas = $this->tarimaModel->getTarimasActivas(); // Asumiendo que todas son activas
         
-        // Obtener estadísticas de usuarios
-        $totalUsuarios = $this->usuarioModel->getTotalUsuarios();
+        // Obtener estadísticas de usuarios solo si es administrador
+        $totalUsuarios = 0;
+        if ($this->hasRole('administrador')) {
+            $totalUsuarios = $this->usuarioModel->getTotalUsuarios();
+        }
         
         $data = [
             'username' => $_SESSION['username'],
             'success' => $_GET['success'] ?? null,
             'total_tarimas' => $totalTarimas,
             'tarimas_activas' => $tarimasActivas,
-            'total_usuarios' => $totalUsuarios
+            'total_usuarios' => $totalUsuarios,
+            'role' => $_SESSION['role'] ?? 'produccion'
         ];
         
         $this->view('dashboard/index', $data);

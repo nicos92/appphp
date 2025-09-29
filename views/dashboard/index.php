@@ -51,6 +51,7 @@
                 </div>
             </div>
         </div>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'administrador'): ?>
         <div class="col-md-6 col-lg-3">
             <div class="card text-center">
                 <div class="card-body">
@@ -63,6 +64,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
         <div class="col-md-6 col-lg-3">
             <div class="card text-center">
                 <div class="card-body">
@@ -147,10 +149,12 @@
                         <div class="display-4 fw-bold text-primary"><?= number_format($total_tarimas ?? 0); ?></div>
                         <p class="text-muted">Tarimas Registradas</p>
                     </div>
+                    <?php if (isset($role) && $role === 'administrador'): ?>
                     <div class="text-center">
                         <div class="display-4 fw-bold text-info"><?= number_format($total_usuarios ?? 0); ?></div>
                         <p class="text-muted">Usuarios Registrados</p>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
