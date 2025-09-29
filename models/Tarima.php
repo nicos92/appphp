@@ -65,81 +65,40 @@ class Tarima {
     }
     
     public function getTarimasFiltradas($filtros) {
-        $whereConditions = [];
-        $params = [];
+        // Prepare parameters for the stored procedure
+        $numero_tarima = !empty($filtros['numero_tarima']) ? $filtros['numero_tarima'] : null;
+        $numero_usuario = !empty($filtros['numero_usuario']) ? $filtros['numero_usuario'] : null;
+        $numero_venta = !empty($filtros['numero_venta']) ? $filtros['numero_venta'] : null;
+        $fecha_registro = !empty($filtros['fecha_registro']) ? $filtros['fecha_registro'] : null;
+        $legajo = !empty($filtros['legajo']) ? $filtros['legajo'] : null;
+        $nombre_usuario = !empty($filtros['nombre_usuario']) ? $filtros['nombre_usuario'] : null;
+        $cantidad_cajas_min = !empty($filtros['cantidad_cajas_min']) && is_numeric($filtros['cantidad_cajas_min']) ? (int)$filtros['cantidad_cajas_min'] : null;
+        $peso_min = !empty($filtros['peso_min']) && is_numeric($filtros['peso_min']) ? (float)$filtros['peso_min'] : null;
         
-        // Número de tarima
-        if (!empty($filtros['numero_tarima'])) {
-            $whereConditions[] = "t.numero_tarima LIKE ?";
-            $params[] = '%' . $filtros['numero_tarima'] . '%';
-        }
+        // Limit empty string values to be treated as null
+        $numero_tarima = ($numero_tarima === '') ? null : $numero_tarima;
+        $numero_usuario = ($numero_usuario === '') ? null : $numero_usuario;
+        $numero_venta = ($numero_venta === '') ? null : $numero_venta;
+        $legajo = ($legajo === '') ? null : $legajo;
+        $nombre_usuario = ($nombre_usuario === '') ? null : $nombre_usuario;
         
-        // Número de usuario
-        if (!empty($filtros['numero_usuario'])) {
-            $whereConditions[] = "t.numero_usuario LIKE ?";
-            $params[] = '%' . $filtros['numero_usuario'] . '%';
-        }
-        
-        // Número de venta
-        if (!empty($filtros['numero_venta'])) {
-            $whereConditions[] = "t.numero_venta LIKE ?";
-            $params[] = '%' . $filtros['numero_venta'] . '%';
-        }
-        
-        // Fecha de registro
-        if (!empty($filtros['fecha_registro'])) {
-            $whereConditions[] = "DATE(t.fecha_registro) = ?";
-            $params[] = $filtros['fecha_registro'];
-        }
-        
-        // Legajo
-        if (!empty($filtros['legajo'])) {
-            $whereConditions[] = "t.legajo LIKE ?";
-            $params[] = '%' . $filtros['legajo'] . '%';
-        }
-        
-        // Nombre de usuario
-        if (!empty($filtros['nombre_usuario'])) {
-            $whereConditions[] = "t.nombre_usuario LIKE ?";
-            $params[] = '%' . $filtros['nombre_usuario'] . '%';
-        }
-        
-        // Cantidad de cajas mínima
-        if (!empty($filtros['cantidad_cajas_min']) && is_numeric($filtros['cantidad_cajas_min'])) {
-            $whereConditions[] = "t.cantidad_cajas >= ?";
-            $params[] = (int)$filtros['cantidad_cajas_min'];
-        }
-        
-        // Peso mínimo
-        if (!empty($filtros['peso_min']) && is_numeric($filtros['peso_min'])) {
-            $whereConditions[] = "t.peso >= ?";
-            $params[] = (float)$filtros['peso_min'];
-        }
-        
-        $whereClause = '';
-        if (!empty($whereConditions)) {
-            $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
-        }
-        
-        $sql = "SELECT
-                    t.id_tarima,
-                    t.numero_tarima,
-                    t.numero_usuario,
-                    t.cantidad_cajas,
-                    t.peso,
-                    t.numero_venta,
-                    t.descripcion,
-                    t.fecha_registro,
-                    t.legajo,
-                    t.nombre_usuario
-                FROM vista_tarimas_con_legajo t
-                {$whereClause}
-                ORDER BY t.fecha_registro DESC
-                LIMIT 1000";
-        
+        $sql = "CALL FiltrarTarimas(?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([
+            $numero_tarima,
+            $numero_usuario,
+            $numero_venta,
+            $fecha_registro,
+            $legajo,
+            $nombre_usuario,
+            $cantidad_cajas_min,
+            $peso_min
+        ]);
+        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor(); // Close the cursor to free up resources
+        
+        return $results;
     }
     
     public function getConnection() {
