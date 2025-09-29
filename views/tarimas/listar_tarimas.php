@@ -59,7 +59,7 @@
                                     <td><?= htmlspecialchars($tarima['nombre_usuario'] ?? 'N/A'); ?></td>
                                     <td><?= htmlspecialchars($tarima['fecha_registro']); ?></td>
                                     <td><?= htmlspecialchars($tarima['descripcion'] ?? ''); ?></td>
-                                    <?php if (isset($role) && $role === 'administrador'): ?>
+                                    <?php if (isset($role) && ($role === 'administrador' || $role === 'jefe_produccion')): ?>
                                     <td>
                                         <a href="<?= BASE_URL ?>/tarimas/editar_tarima/<?= $tarima['id_tarima']; ?>" class="btn btn-sm btn-outline-warning" title="Editar tarima">
                                             <i class="fas fa-edit"></i>
