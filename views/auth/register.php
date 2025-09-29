@@ -135,8 +135,8 @@
                             </div>
                         </div>
 
-                        <div class="mb-3" id="passwordMatchMessage" style="display: none;">
-                            <div id="passwordDivMessage" class="alert alert-info alert-danger" role="alert">
+                        <div class="mb-0  p-0 " id="passwordMatchMessage" style="display: none;">
+                            <div id="passwordDivMessage" class="alert p-0  alert-info alert-danger" role="alert">
                                 <i class="fas fa-info-circle me-2"></i>
                                 <span id="passwordMatchText"></span>
                             </div>
@@ -223,15 +223,15 @@
         const passwordDivMessage = document.getElementById('passwordDivMessage');
         if (confirmPassword.length > 0) { // Solo mostrar mensaje si hay algo escrito en confirm password
             if (password === confirmPassword) {
-                passwordDivMessage.className = 'mb-3 alert alert-success';
+                passwordDivMessage.className = 'mb-0 p-2 alert alert-success';
                 messageText.innerHTML = '<i class="fas fa-check-circle text-success me-2"></i>Las contraseñas coinciden';
-                messageDiv.className = 'mb-3 alert alert-success';
+                messageDiv.className = 'mb-0 p-0  alert alert-success';
                 messageDiv.style.display = 'block';
             } else {
                 messageText.innerHTML = '<i class="fas fa-times-circle text-danger me-2"></i>Las contraseñas no coinciden';
-                messageDiv.className = 'mb-3 alert alert-danger';
+                messageDiv.className = 'mb-0 p-0  alert alert-danger';
                 messageDiv.style.display = 'block';
-                passwordDivMessage.className = 'mb-3 alert alert-danger';
+                passwordDivMessage.className = ' mb-0 alert alert-danger';
             }
         } else {
             messageDiv.style.display = 'none';
