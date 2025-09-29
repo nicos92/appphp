@@ -58,5 +58,13 @@ class Tarima {
         return $stmt->fetchColumn();
     }
     
-   
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function getConnection() {
+        return $this->db;
+    }
 }

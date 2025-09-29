@@ -117,4 +117,124 @@ class TarimaController extends Controller {
         
         $this->view('tarimas/listar_tarimas', $data);
     }
+    
+    public function editarTarima($id) {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        // Solo administradores pueden editar tarimas
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('tarimas/listar_tarimas');
+            return;
+        }
+        
+        $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
+        $stmt->execute([$id]);
+        $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$tarima) {
+            $this->redirect('tarimas/listar_tarimas');
+            return;
+        }
+        
+        $data = [
+            'username' => $_SESSION['username'],
+            'tarima' => $tarima,
+            'role' => $_SESSION['role']
+        ];
+        
+        $this->view('tarimas/editar_tarima', $data);
+    }
+    
+    public function actualizarTarima($id) {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        // Solo administradores pueden actualizar tarimas
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('tarimas/listar_tarimas');
+            return;
+        }
+        
+        $tarimaData = [
+            'id' => $id,
+            'codigoBarras' => filter_var(trim($_POST['codigoBarras']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'numeroTarima' => filter_var(trim($_POST['numeroTarima']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'numeroUsuario' => filter_var(trim($_POST['numeroUsuario']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'cantidadCajas' => filter_var(trim($_POST['cantidadCajas']), FILTER_VALIDATE_INT) ? (int)$_POST['cantidadCajas'] : 0,
+            'peso' => filter_var(trim($_POST['peso']), FILTER_VALIDATE_FLOAT) ? (float)$_POST['peso'] : 0,
+            'numeroVenta' => filter_var(trim($_POST['numeroVenta']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'descripcion' => filter_var(trim($_POST['descripcion']), FILTER_SANITIZE_FULL_SPECIAL_CHARS)
+        ];
+
+        // Validate required fields
+        if (empty($tarimaData['codigoBarras']) || empty($tarimaData['numeroTarima'])) {
+            // Recuperar la tarima para mostrarla en el formulario
+            $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
+            $stmt->execute([$id]);
+            $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $data = [
+                'username' => $_SESSION['username'],
+                'tarima' => $tarima,
+                'role' => $_SESSION['role'],
+                'error' => 'required_fields_missing'
+            ];
+            
+            $this->view('tarimas/editar_tarima', $data);
+            return;
+        }
+
+        $stmt = $this->tarimaModel->getConnection()->prepare("
+            UPDATE tarimas 
+            SET codigo_barras = ?, numero_tarima = ?, numero_usuario = ?, 
+                cantidad_cajas = ?, peso = ?, numero_venta = ?, descripcion = ?
+            WHERE id_tarima = ?
+        ");
+        
+        $result = $stmt->execute([
+            $tarimaData['codigoBarras'],
+            $tarimaData['numeroTarima'],
+            $tarimaData['numeroUsuario'],
+            $tarimaData['cantidadCajas'],
+            $tarimaData['peso'],
+            $tarimaData['numeroVenta'],
+            $tarimaData['descripcion'],
+            $tarimaData['id']
+        ]);
+        
+        if ($result) {
+            // Recuperar la tarima actualizada para mostrarla en el formulario
+            $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
+            $stmt->execute([$id]);
+            $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $data = [
+                'username' => $_SESSION['username'],
+                'tarima' => $tarima,
+                'role' => $_SESSION['role'],
+                'success' => 'tarima_actualizada'
+            ];
+            
+            $this->view('tarimas/editar_tarima', $data);
+        } else {
+            // Recuperar la tarima para mostrarla en el formulario
+            $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
+            $stmt->execute([$id]);
+            $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $data = [
+                'username' => $_SESSION['username'],
+                'tarima' => $tarima,
+                'role' => $_SESSION['role'],
+                'error' => 'update_failed'
+            ];
+            
+            $this->view('tarimas/editar_tarima', $data);
+        }
+    }
 }

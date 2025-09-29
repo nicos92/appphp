@@ -72,6 +72,12 @@ if ($uri === '/' || $uri === '' || $uri === '/public') {
 } elseif (preg_match('/^\/dashboard\/actualizar_usuario\/(\d+)$/', $uri, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_logged_in'])) {
     $controller = new DashboardController();
     $controller->actualizarUsuario($matches[1]);
+} elseif (preg_match('/^\/tarimas\/editar_tarima\/(\d+)$/', $uri, $matches) && isset($_SESSION['user_logged_in'])) {
+    $controller = new TarimaController();
+    $controller->editarTarima($matches[1]);
+} elseif (preg_match('/^\/tarimas\/actualizar_tarima\/(\d+)$/', $uri, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_logged_in'])) {
+    $controller = new TarimaController();
+    $controller->actualizarTarima($matches[1]);
 } else {
     // Página no encontrada
     http_response_code(404);

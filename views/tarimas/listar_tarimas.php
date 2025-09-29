@@ -41,6 +41,9 @@
                             <th>Nombre Usuario</th>
                             <th>Fecha de Registro</th>
                             <th>Descripción</th>
+                            <?php if (isset($role) && $role === 'administrador'): ?>
+                            <th>Acciones</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,11 +59,18 @@
                                     <td><?= htmlspecialchars($tarima['nombre_usuario'] ?? 'N/A'); ?></td>
                                     <td><?= htmlspecialchars($tarima['fecha_registro']); ?></td>
                                     <td><?= htmlspecialchars($tarima['descripcion'] ?? ''); ?></td>
+                                    <?php if (isset($role) && $role === 'administrador'): ?>
+                                    <td>
+                                        <a href="<?= BASE_URL ?>/tarimas/editar_tarima/<?= $tarima['id_tarima']; ?>" class="btn btn-sm btn-outline-warning" title="Editar tarima">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                    <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="9" class="text-center text-muted">No hay tarimas registradas aún.</td>
+                                <td colspan="<?php echo (isset($role) && $role === 'administrador') ? 10 : 9; ?>" class="text-center text-muted">No hay tarimas registradas aún.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
