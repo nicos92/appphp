@@ -18,7 +18,7 @@ class TarimaController extends Controller {
         }
         
         // Solo usuarios con permiso para crear tarimas pueden acceder
-        if (!$this->hasAnyRole(['administrador', 'produccion'])) {
+        if (!$this->hasAnyRole(['administrador', 'produccion', 'jefe_produccion'])) {
             $this->redirect('auth/login');
             return;
         }
@@ -39,7 +39,7 @@ class TarimaController extends Controller {
         }
 
         // Solo usuarios con permiso para crear tarimas pueden guardar
-        if (!$this->hasAnyRole(['administrador', 'produccion'])) {
+        if (!$this->hasAnyRole(['administrador', 'produccion', 'jefe_produccion'])) {
             $this->redirect('auth/login');
             return;
         }
@@ -102,7 +102,7 @@ class TarimaController extends Controller {
         }
         
         // Solo usuarios con permiso para ver tarimas pueden acceder
-        if (!$this->hasAnyRole(['administrador', 'produccion'])) {
+        if (!$this->hasAnyRole(['administrador', 'produccion', 'jefe_produccion'])) {
             $this->redirect('auth/login');
             return;
         }
@@ -124,8 +124,8 @@ class TarimaController extends Controller {
             return;
         }
         
-        // Solo administradores pueden editar tarimas
-        if (!$this->hasRole('administrador')) {
+        // Solo administradores y jefes de producción pueden editar tarimas
+        if (!$this->hasAnyRole(['administrador', 'jefe_produccion'])) {
             $this->redirect('tarimas/listar_tarimas');
             return;
         }
@@ -154,8 +154,8 @@ class TarimaController extends Controller {
             return;
         }
         
-        // Solo administradores pueden actualizar tarimas
-        if (!$this->hasRole('administrador')) {
+        // Solo administradores y jefes de producción pueden actualizar tarimas
+        if (!$this->hasAnyRole(['administrador', 'jefe_produccion'])) {
             $this->redirect('tarimas/listar_tarimas');
             return;
         }

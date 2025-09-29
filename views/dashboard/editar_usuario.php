@@ -116,6 +116,7 @@
                                     <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
                                     <select class="form-select" id="idRol" name="idRol" required>
                                         <option value="2" <?= $usuario['id_rol'] == 2 ? 'selected' : ''; ?>>Producción (Acceso limitado)</option>
+                                        <option value="3" <?= $usuario['id_rol'] == 3 ? 'selected' : ''; ?>>Jefe de Producción (Gestión de tarimas)</option>
                                         <option value="1" <?= $usuario['id_rol'] == 1 ? 'selected' : ''; ?>>Administrador (Acceso completo)</option>
                                     </select>
                                 </div>
