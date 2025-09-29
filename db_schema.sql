@@ -53,4 +53,4 @@ INSERT INTO usuarios (username, email, password, first_name, last_name, legajo, 
 
 -- Insertar una tarima de ejemplo
 INSERT INTO tarimas (codigo_barras, numero_tarima, numero_usuario, cantidad_cajas, peso, numero_venta, descripcion, id_usuario) VALUES
-('123456789012345678901234567890', '000001', '01', 10, 25.50, '25-000001', 'Tarima de ejemplo', 1);
+('099999921296599980006045090774', '212965', '06', 45, 50.90, '25-0774', 'Tarima de ejemplo creada con el código de barras completo', 1);

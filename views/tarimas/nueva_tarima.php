@@ -260,7 +260,7 @@
             // For numeroUsuario (2 digits max): use first 2 digits of userPart2
             document.getElementById('numeroUsuario').value = userPart2.substring(2, 4);
             
-            // For cantidadCajas (3 digits max): use positions 2-4 of userPart2 (positions 19-21 of barcode)
+            // For cantidadCajas (3 digits max): use positions 4-6 of userPart2 (positions 21-23 of barcode)
             document.getElementById('cantidadCajas').value = userPart2.substring(4, 7);
             
             // For peso: use the last 6 digits of the barcode (positions 24-29), 4 for whole part and 2 for decimal

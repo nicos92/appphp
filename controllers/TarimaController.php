@@ -40,8 +40,20 @@ class TarimaController extends Controller {
             'peso' => filter_var(trim($_POST['peso']), FILTER_VALIDATE_FLOAT) ? (float)$_POST['peso'] : 0,
             'numeroVenta' => filter_var(trim($_POST['numeroVenta']), FILTER_SANITIZE_STRING),
             'descripcion' => filter_var(trim($_POST['descripcion']), FILTER_SANITIZE_STRING),
-            'idUsuario' => $_SESSION['user_id'] // Agregar el ID del usuario que inició sesión
+            'idUsuario' => isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0 // Asegurar que el ID del usuario esté disponible
         ];
+
+        // Si la cantidad de cajas es 0, intentar extraerla del código de barras
+        if ($tarimaData['cantidadCajas'] == 0 && !empty($tarimaData['codigoBarras'])) {
+            $codigoBarras = $tarimaData['codigoBarras'];
+            if (strlen($codigoBarras) >= 24) {
+                // Extraer la cantidad de cajas de las posiciones 21-23 del código de barras (3 dígitos)
+                $cajasPart = substr($codigoBarras, 21, 3);
+                if (is_numeric($cajasPart)) {
+                    $tarimaData['cantidadCajas'] = (int)$cajasPart;
+                }
+            }
+        }
 
         // Si el peso no está definido o es 0, intentar extraerlo de los últimos 6 dígitos del código de barras
         if ($tarimaData['peso'] == 0 && !empty($tarimaData['codigoBarras'])) {
