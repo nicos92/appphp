@@ -107,12 +107,25 @@ class TarimaController extends Controller {
             return;
         }
         
-        $tarimas = $this->tarimaModel->getLastTarimas(1000);
+        // Recoger parámetros de filtro
+        $filtros = [
+            'numero_tarima' => $_GET['numero_tarima'] ?? '',
+            'numero_usuario' => $_GET['numero_usuario'] ?? '',
+            'numero_venta' => $_GET['numero_venta'] ?? '',
+            'fecha_registro' => $_GET['fecha_registro'] ?? '',
+            'legajo' => $_GET['legajo'] ?? '',
+            'nombre_usuario' => $_GET['nombre_usuario'] ?? '',
+            'cantidad_cajas_min' => $_GET['cantidad_cajas_min'] ?? '',
+            'peso_min' => $_GET['peso_min'] ?? ''
+        ];
+        
+        $tarimas = $this->tarimaModel->getTarimasFiltradas($filtros);
         
         $data = [
             'username' => $_SESSION['username'],
             'tarimas' => $tarimas,
-            'role' => $_SESSION['role'] ?? 'produccion'
+            'role' => $_SESSION['role'] ?? 'produccion',
+            'filtros' => $filtros
         ];
         
         $this->view('tarimas/listar_tarimas', $data);
@@ -190,8 +203,8 @@ class TarimaController extends Controller {
         }
 
         $stmt = $this->tarimaModel->getConnection()->prepare("
-            UPDATE tarimas 
-            SET codigo_barras = ?, numero_tarima = ?, numero_usuario = ?, 
+            UPDATE tarimas
+            SET codigo_barras = ?, numero_tarima = ?, numero_usuario = ?,
                 cantidad_cajas = ?, peso = ?, numero_venta = ?, descripcion = ?
             WHERE id_tarima = ?
         ");

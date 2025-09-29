@@ -130,7 +130,7 @@ class DashboardController extends Controller {
         ];
 
         // Validaciones...
-        if (empty($usuarioData['firstName']) || empty($usuarioData['lastName']) || 
+        if (empty($usuarioData['firstName']) || empty($usuarioData['lastName']) ||
             empty($usuarioData['email']) || empty($usuarioData['username']) || empty($usuarioData['legajo'])) {
             $this->redirect('dashboard/editar_usuario/' . $id . '?error=empty_fields');
             return;
@@ -154,8 +154,8 @@ class DashboardController extends Controller {
         }
 
         $stmt = $this->usuarioModel->getConnection()->prepare("
-            UPDATE usuarios 
-            SET first_name = ?, last_name = ?, email = ?, username = ?, legajo = ?, 
+            UPDATE usuarios
+            SET first_name = ?, last_name = ?, email = ?, username = ?, legajo = ?,
                 department = ?, id_rol = ?, activo = ?
             WHERE id_usuario = ?
         ");

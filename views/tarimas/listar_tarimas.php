@@ -27,7 +27,61 @@
                 </a>
             </div>
         </div>
-        <div class="card-body">
+        
+        <!-- Sección de filtrado -->
+        <div class="card-body border-bottom">
+            <h5 class="mb-3"><i class="fas fa-filter me-2"></i>Filtros de Búsqueda</h5>
+            <form id="filtroTarimas" method="GET" action="<?= BASE_URL ?>/tarimas">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="numero_tarima" class="form-label">Número de Tarima</label>
+                        <input type="text" class="form-control" id="numero_tarima" name="numero_tarima" value="<?= htmlspecialchars($filtros['numero_tarima'] ?? ''); ?>" placeholder="Buscar por número">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="numero_usuario" class="form-label">Número de Usuario</label>
+                        <input type="text" class="form-control" id="numero_usuario" name="numero_usuario" value="<?= htmlspecialchars($filtros['numero_usuario'] ?? ''); ?>" placeholder="Buscar por usuario">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="numero_venta" class="form-label">Número de Venta</label>
+                        <input type="text" class="form-control" id="numero_venta" name="numero_venta" value="<?= htmlspecialchars($filtros['numero_venta'] ?? ''); ?>" placeholder="Buscar por venta">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fecha_registro" class="form-label">Fecha de Registro</label>
+                        <input type="date" class="form-control" id="fecha_registro" name="fecha_registro" value="<?= htmlspecialchars($filtros['fecha_registro'] ?? ''); ?>">
+                    </div>
+                </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-3">
+                        <label for="legajo" class="form-label">Legajo Usuario</label>
+                        <input type="text" class="form-control" id="legajo" name="legajo" value="<?= htmlspecialchars($filtros['legajo'] ?? ''); ?>" placeholder="Buscar por legajo">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="nombre_usuario" class="form-label">Nombre Usuario</label>
+                        <input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario" value="<?= htmlspecialchars($filtros['nombre_usuario'] ?? ''); ?>" placeholder="Buscar por nombre">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="cantidad_cajas_min" class="form-label">Cajas Mínimas</label>
+                        <input type="number" class="form-control" id="cantidad_cajas_min" name="cantidad_cajas_min" value="<?= htmlspecialchars($filtros['cantidad_cajas_min'] ?? ''); ?>" placeholder="Mínimo">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="peso_min" class="form-label">Peso Mínimo (kg)</label>
+                        <input type="number" step="0.01" class="form-control" id="peso_min" name="peso_min" value="<?= htmlspecialchars($filtros['peso_min'] ?? ''); ?>" placeholder="Mínimo">
+                    </div>
+                </div>
+                <div class="row g-3 mt-3">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-search me-2"></i>Filtrar
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="limpiarFiltros()">
+                            <i class="fas fa-eraser me-2"></i>Limpiar Filtros
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
@@ -70,7 +124,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="<?php echo (isset($role) && $role === 'administrador') ? 10 : 9; ?>" class="text-center text-muted">No hay tarimas registradas aún.</td>
+                                <td colspan="<?php echo (isset($role) && ($role === 'administrador' || $role === 'jefe_produccion')) ? 10 : 9; ?>" class="text-center text-muted">No hay tarimas registradas aún.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -79,3 +133,20 @@
         </div>
     </div>
 </div>
+
+<script>
+function limpiarFiltros() {
+    // Limpiar todos los campos de filtro
+    document.getElementById('numero_tarima').value = '';
+    document.getElementById('numero_usuario').value = '';
+    document.getElementById('numero_venta').value = '';
+    document.getElementById('fecha_registro').value = '';
+    document.getElementById('legajo').value = '';
+    document.getElementById('nombre_usuario').value = '';
+    document.getElementById('cantidad_cajas_min').value = '';
+    document.getElementById('peso_min').value = '';
+    
+    // Enviar el formulario para actualizar la lista sin filtros
+    document.getElementById('filtroTarimas').submit();
+}
+</script>
