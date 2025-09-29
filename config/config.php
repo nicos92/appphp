@@ -1,6 +1,6 @@
 <?php
 // config/config.php
-define('BASE_URL', 'http://localhost/appphp');
+define('BASE_URL', 'http://192.168.0.209/appphp');
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');  // Ajusta según tu configuración
 define('DB_PASS', '');      // Ajusta según tu configuración
