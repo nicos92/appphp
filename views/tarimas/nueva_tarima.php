@@ -99,9 +99,14 @@
                     </div>
                     
                     <div class="d-flex justify-content-between">
-                        <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Volver al Panel
-                        </a>
+                        <div>
+                            <a href="<?= BASE_URL ?>/tarimas" class="btn btn-outline-info me-2">
+                                <i class="fas fa-list me-2"></i>Ver Tarimas
+                            </a>
+                            <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver al Panel
+                            </a>
+                        </div>
                         <button type="submit" class="btn btn-submit btn-lg">
                             <i class="fas fa-save me-2"></i>Guardar Tarima
                         </button>

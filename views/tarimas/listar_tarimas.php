@@ -18,9 +18,14 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; ">
             <h3 class="mb-0">Inventario de Tarimas</h3>
-            <a href="<?= BASE_URL ?>/dashboard" class="btn btn-light">
-                <i class="fas fa-arrow-left me-2"></i>Volver al Panel
-            </a>
+            <div>
+                <a href="<?= BASE_URL ?>/tarimas/nueva_tarima" class="btn btn-light me-2">
+                    <i class="fas fa-plus me-2"></i>Nueva Tarima
+                </a>
+                <a href="<?= BASE_URL ?>/dashboard" class="btn btn-light">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Panel
+                </a>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
