@@ -58,11 +58,5 @@ class Tarima {
         return $stmt->fetchColumn();
     }
     
-    public function getTarimasActivas() {
-        // Por ahora, asumimos que todas las tarimas registradas son activas
-        // Si hay un campo que indique si una tarima está activa, se usaría aquí
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM tarimas");
-        $stmt->execute();
-        return $stmt->fetchColumn();
-    }
+   
 }

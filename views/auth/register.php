@@ -115,9 +115,9 @@
                                     <div class="input-group position-relative">
                                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                         <input type="password" class="form-control" id="password" name="password" required>
-                                        <span class="password-toggle position-absolute end-0 top-50 translate-middle-y pe-3" style="cursor: pointer; z-index: 5;" onclick="togglePassword('password', 'passwordToggle')">
+                                        <button type="button" class="password-toggle position-absolute end-0 top-50 translate-middle-y pe-3 border-0 bg-transparent" style="cursor: pointer; z-index: 5;" onclick="togglePassword('password', 'passwordToggle')" aria-label="Mostrar/Ocultar contraseña">
                                             <i id="passwordToggle" class="fas fa-eye-slash"></i>
-                                        </span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -127,9 +127,9 @@
                                     <div class="input-group position-relative">
                                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                                        <span class="password-toggle position-absolute end-0 top-50 translate-middle-y pe-3" style="cursor: pointer; z-index: 5;" onclick="togglePassword('confirmPassword', 'confirmPasswordToggle')">
+                                        <button type="button" class="password-toggle position-absolute end-0 top-50 translate-middle-y pe-3 border-0 bg-transparent" style="cursor: pointer; z-index: 5;" onclick="togglePassword('confirmPassword', 'confirmPasswordToggle')" aria-label="Mostrar/Ocultar confirmación de contraseña">
                                             <i id="confirmPasswordToggle" class="fas fa-eye-slash"></i>
-                                        </span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

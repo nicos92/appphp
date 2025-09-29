@@ -28,7 +28,6 @@ class DashboardController extends Controller {
         
         // Obtener estadísticas de tarimas
         $totalTarimas = $this->tarimaModel->getTotalTarimas();
-        $tarimasActivas = $this->tarimaModel->getTarimasActivas(); // Asumiendo que todas son activas
         
         // Obtener estadísticas de usuarios solo si es administrador
         $totalUsuarios = 0;
@@ -40,7 +39,7 @@ class DashboardController extends Controller {
             'username' => $_SESSION['username'],
             'success' => $_GET['success'] ?? null,
             'total_tarimas' => $totalTarimas,
-            'tarimas_activas' => $tarimasActivas,
+            'tarimas_activas' => "",
             'total_usuarios' => $totalUsuarios,
             'role' => $_SESSION['role'] ?? 'produccion'
         ];
@@ -71,4 +70,4 @@ class DashboardController extends Controller {
         $this->view('dashboard/usuarios', $data);
     }
 }
-?>
+
