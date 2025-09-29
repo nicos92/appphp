@@ -53,4 +53,20 @@ INSERT INTO usuarios (username, email, password, first_name, last_name, legajo, 
 
 -- Insertar una tarima de ejemplo
 INSERT INTO tarimas (codigo_barras, numero_tarima, numero_usuario, cantidad_cajas, peso, numero_venta, descripcion, id_usuario) VALUES
-('099999921296599980006045090774', '212965', '06', 45, 50.90, '25-0774', 'Tarima de ejemplo creada con el código de barras completo', 1);
+('099999921296599980006045090774', '212965', '06', 45, 0907.74, '25-0774', 'Tarima de ejemplo creada con el código de barras completo', 1);
+
+-- creacion de vista general
+CREATE VIEW vista_tarimas_con_legajo AS
+SELECT t.id_tarima,
+t.codigo_barras, 
+t.numero_tarima, 
+t.numero_usuario, 
+t.cantidad_cajas, 
+t.peso, 
+t.numero_venta, 
+t.descripcion, 
+t.fecha_registro, 
+u.legajo, 
+CONCAT(u.first_name, ' ', u.last_name) AS nombre_usuario
+FROM tarimas t 
+LEFT JOIN usuarios u ON t.id_usuario = u.id_usuario;

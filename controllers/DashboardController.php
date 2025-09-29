@@ -21,6 +21,12 @@ class DashboardController extends Controller {
             return;
         }
         
+        // Solo usuarios con rol de administrador pueden ver el panel completo
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('tarimas/listar_tarimas');
+            return;
+        }
+        
         // Obtener estadísticas de tarimas
         $totalTarimas = $this->tarimaModel->getTotalTarimas();
         $tarimasActivas = $this->tarimaModel->getTarimasActivas(); // Asumiendo que todas son activas
@@ -37,6 +43,29 @@ class DashboardController extends Controller {
         ];
         
         $this->view('dashboard/index', $data);
+    }
+    
+    public function usuarios() {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        // Solo usuarios con rol de administrador pueden ver la lista de usuarios
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        $usuarios = $this->usuarioModel->getAllUsuariosWithRoles();
+        
+        $data = [
+            'username' => $_SESSION['username'],
+            'role' => $_SESSION['role'],
+            'usuarios' => $usuarios
+        ];
+        
+        $this->view('dashboard/usuarios', $data);
     }
 }
 ?>

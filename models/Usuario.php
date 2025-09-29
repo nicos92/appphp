@@ -10,13 +10,16 @@ class Usuario {
     }
 
     public function getByUsername($username) {
-        $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE username = ?");
+        $stmt = $this->db->prepare("SELECT u.*, r.nombre_rol FROM usuarios u LEFT JOIN roles r ON u.id_rol = r.id_rol WHERE u.username = ?");
         $stmt->execute([$username]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function create($userData) {
-        $stmt = $this->db->prepare("INSERT INTO usuarios (username, email, password, first_name, last_name, legajo, department) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $idRol = $userData['idRol'] ?? 2; // Por defecto rol de producción (id_rol = 2)
+        $activo = $userData['activo'] ?? 1; // Por defecto activo (1)
+        
+        $stmt = $this->db->prepare("INSERT INTO usuarios (username, email, password, first_name, last_name, legajo, department, id_rol, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([
             $userData['username'],
             $userData['email'],
@@ -24,7 +27,9 @@ class Usuario {
             $userData['firstName'],
             $userData['lastName'],
             $userData['legajo'],
-            $userData['department']
+            $userData['department'],
+            $idRol,
+            $activo
         ]);
     }
 
@@ -38,5 +43,20 @@ class Usuario {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM usuarios");
         $stmt->execute();
         return $stmt->fetchColumn();
+    }
+    
+    public function getAllUsuariosWithRoles() {
+        $stmt = $this->db->prepare("
+            SELECT u.id_usuario, u.username, u.email, u.first_name, u.last_name, u.legajo, u.department, u.created_at, u.activo, r.nombre_rol
+            FROM usuarios u
+            LEFT JOIN roles r ON u.id_rol = r.id_rol
+            ORDER BY u.created_at DESC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function getConnection() {
+        return $this->db;
     }
 }

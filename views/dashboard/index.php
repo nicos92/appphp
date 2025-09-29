@@ -59,7 +59,7 @@
                     </div>
                     <h5 class="mb-2">Usuarios</h5>
                     <p class="text-muted">Administra cuentas de usuario</p>
-                    <a href="#" class="btn btn-outline-success btn-sm">Ver más</a>
+                    <a href="<?= BASE_URL ?>/dashboard/usuarios" class="btn btn-outline-success btn-sm">Ver más</a>
                 </div>
             </div>
         </div>

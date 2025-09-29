@@ -41,5 +41,34 @@ class Controller {
         }
         return isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
     }
+    
+    protected function hasRole($roleName) {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        return isset($_SESSION['role']) && $_SESSION['role'] === $roleName;
+    }
+    
+    protected function hasAnyRole($roleNames) {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['role'])) {
+            return false;
+        }
+        return in_array($_SESSION['role'], $roleNames);
+    }
+    
+    protected function requireRole($roleName, $redirect = 'auth/login') {
+        if (!$this->hasRole($roleName)) {
+            $this->redirect($redirect);
+        }
+    }
+    
+    protected function requireAnyRole($roleNames, $redirect = 'auth/login') {
+        if (!$this->hasAnyRole($roleNames)) {
+            $this->redirect($redirect);
+        }
+    }
 }
 ?>

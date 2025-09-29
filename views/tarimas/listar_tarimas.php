@@ -27,13 +27,13 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                            <th>ID</th>
-                            <th>Código de Barras</th>
                             <th>Número de Tarima</th>
                             <th>Número de Usuario</th>
                             <th>Cantidad de Cajas</th>
                             <th>Peso (kg)</th>
                             <th>Número de Venta</th>
+                            <th>Legajo Usuario</th>
+                            <th>Nombre Usuario</th>
                             <th>Fecha de Registro</th>
                             <th>Descripción</th>
                         </tr>
@@ -42,15 +42,15 @@
                         <?php if (!empty($tarimas)): ?>
                             <?php foreach ($tarimas as $tarima): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($tarima['id_tarima']); ?></td>
-                                    <td><?= htmlspecialchars($tarima['codigo_barras']); ?></td>
                                     <td><?= htmlspecialchars($tarima['numero_tarima']); ?></td>
                                     <td><?= htmlspecialchars($tarima['numero_usuario']); ?></td>
                                     <td><?= htmlspecialchars($tarima['cantidad_cajas']); ?></td>
                                     <td><?= htmlspecialchars($tarima['peso']); ?></td>
                                     <td><?= htmlspecialchars($tarima['numero_venta']); ?></td>
+                                    <td><?= htmlspecialchars($tarima['legajo'] ?? 'N/A'); ?></td>
+                                    <td><?= htmlspecialchars($tarima['nombre_usuario'] ?? 'N/A'); ?></td>
                                     <td><?= htmlspecialchars($tarima['fecha_registro']); ?></td>
-                                    <td><?= htmlspecialchars($tarima['descripcion']); ?></td>
+                                    <td><?= htmlspecialchars($tarima['descripcion'] ?? ''); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>

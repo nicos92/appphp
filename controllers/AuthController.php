@@ -33,8 +33,9 @@ class AuthController extends Controller {
                 session_start();
             }
             $_SESSION['user_logged_in'] = true;
-            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_id'] = $user['id_usuario'];
             $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['nombre_rol'] ?? 'produccion'; // Por defecto 'produccion' si no tiene rol asignado
 
             if ($remember) {
                 setcookie('remember_user', $username, time() + (86400 * 30), '/');
@@ -54,10 +55,38 @@ class AuthController extends Controller {
     }
 
     public function showRegister() {
-        $this->view('auth/register', ['error' => $_GET['error'] ?? null, 'success' => $_GET['success'] ?? null]);
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
+        // Solo administradores pueden registrar nuevos usuarios
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('dashboard');
+            return;
+        }
+        
+        $data = [
+            'error' => $_GET['error'] ?? null,
+            'success' => $_GET['success'] ?? null,
+            'role' => $_SESSION['role'] ?? null
+        ];
+        
+        $this->view('auth/register', $data);
     }
 
     public function register() {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+            return;
+        }
+
+        // Solo administradores pueden crear nuevos usuarios
+        if (!$this->hasRole('administrador')) {
+            $this->redirect('dashboard');
+            return;
+        }
+
         $userData = [
             'firstName' => trim($_POST['firstName']),
             'lastName' => trim($_POST['lastName']),
@@ -66,9 +95,17 @@ class AuthController extends Controller {
             'legajo' => trim($_POST['legajo']),
             'password' => $_POST['password'],
             'confirmPassword' => $_POST['confirmPassword'],
-            'department' => $_POST['department'],
-            'terms' => isset($_POST['terms'])
+            'department' => $_POST['department']
         ];
+
+        // Solo los administradores pueden asignar roles y estado
+        if ($this->hasRole('administrador')) {
+            $userData['idRol'] = (int)($_POST['idRol'] ?? 2); // Por defecto rol de producción
+            $userData['activo'] = isset($_POST['activo']) ? 1 : 0; // Por defecto inactivo
+        } else {
+            $userData['idRol'] = 2; // Por defecto rol de producción
+            $userData['activo'] = 1; // Por defecto activo
+        }
 
         // Validaciones...
         if (empty($userData['firstName']) || empty($userData['lastName']) || empty($userData['email']) || 
@@ -83,10 +120,7 @@ class AuthController extends Controller {
             return;
         }
 
-        if (!$userData['terms']) {
-            $this->redirect('auth/register?error=terms_not_accepted');
-            return;
-        }
+        // Eliminar la validación de términos y condiciones, ya que no es necesaria
 
         if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
             $this->redirect('auth/register?error=invalid_email');

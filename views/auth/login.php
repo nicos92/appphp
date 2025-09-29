@@ -1,3 +1,20 @@
+<?php if (isset($_SESSION['username'])): ?>
+<header class="form-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-0"><i class="fas fa-cubes me-2"></i>Sistema de Inventario</h1>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <span class="me-3">Bienvenido, <strong><?= htmlspecialchars($_SESSION['username'] ?? ''); ?></strong></span>
+                <a href="<?= BASE_URL ?>/auth/logout" class="btn logout-btn text-white">
+                    <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+<?php else: ?>
 <header class="form-header">
     <div class="container">
         <div class="row align-items-center">
@@ -7,6 +24,7 @@
         </div>
     </div>
 </header>
+<?php endif; ?>
 
 <div class="container my-5">
     <div class="row justify-content-center">

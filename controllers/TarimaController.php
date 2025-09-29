@@ -17,6 +17,12 @@ class TarimaController extends Controller {
             return;
         }
         
+        // Solo usuarios con permiso para crear tarimas pueden acceder
+        if (!$this->hasAnyRole(['administrador', 'produccion'])) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
         $data = [
             'username' => $_SESSION['username'],
             'success' => $_GET['success'] ?? null,
@@ -32,14 +38,20 @@ class TarimaController extends Controller {
             return;
         }
 
+        // Solo usuarios con permiso para crear tarimas pueden guardar
+        if (!$this->hasAnyRole(['administrador', 'produccion'])) {
+            $this->redirect('auth/login');
+            return;
+        }
+
         $tarimaData = [
-            'codigoBarras' => filter_var(trim($_POST['codigoBarras']), FILTER_SANITIZE_STRING),
-            'numeroTarima' => filter_var(trim($_POST['numeroTarima']), FILTER_SANITIZE_STRING),
-            'numeroUsuario' => filter_var(trim($_POST['numeroUsuario']), FILTER_SANITIZE_STRING),
+            'codigoBarras' => filter_var(trim($_POST['codigoBarras']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'numeroTarima' => filter_var(trim($_POST['numeroTarima']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'numeroUsuario' => filter_var(trim($_POST['numeroUsuario']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
             'cantidadCajas' => filter_var(trim($_POST['cantidadCajas']), FILTER_VALIDATE_INT) ? (int)$_POST['cantidadCajas'] : 0,
             'peso' => filter_var(trim($_POST['peso']), FILTER_VALIDATE_FLOAT) ? (float)$_POST['peso'] : 0,
-            'numeroVenta' => filter_var(trim($_POST['numeroVenta']), FILTER_SANITIZE_STRING),
-            'descripcion' => filter_var(trim($_POST['descripcion']), FILTER_SANITIZE_STRING),
+            'numeroVenta' => filter_var(trim($_POST['numeroVenta']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'descripcion' => filter_var(trim($_POST['descripcion']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
             'idUsuario' => isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0 // Asegurar que el ID del usuario esté disponible
         ];
 
@@ -89,11 +101,18 @@ class TarimaController extends Controller {
             return;
         }
         
+        // Solo usuarios con permiso para ver tarimas pueden acceder
+        if (!$this->hasAnyRole(['administrador', 'produccion'])) {
+            $this->redirect('auth/login');
+            return;
+        }
+        
         $tarimas = $this->tarimaModel->getLastTarimas(1000);
         
         $data = [
             'username' => $_SESSION['username'],
-            'tarimas' => $tarimas
+            'tarimas' => $tarimas,
+            'role' => $_SESSION['role'] ?? 'produccion'
         ];
         
         $this->view('tarimas/listar_tarimas', $data);

@@ -1,3 +1,20 @@
+<?php if (isset($_SESSION['username'])): ?>
+<header class="form-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-0"><i class="fas fa-cubes me-2"></i>Sistema de Inventario</h1>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <span class="me-3">Bienvenido, <strong><?= htmlspecialchars($_SESSION['username'] ?? ''); ?></strong></span>
+                <a href="<?= BASE_URL ?>/auth/logout" class="btn logout-btn text-white">
+                    <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+<?php else: ?>
 <header class="form-header">
     <div class="container">
         <div class="row align-items-center">
@@ -7,12 +24,13 @@
         </div>
     </div>
 </header>
+<?php endif; ?>
 
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-6">
             <div class="card p-4">
-                <div class="card-header bg-success text-white text-center">
+                <div class="card-header text-success text-center">
                     <h3 class="mb-0">Crear Cuenta</h3>
                 </div>
                 <div class="card-body">
@@ -31,9 +49,6 @@
                             <?php elseif ($error === 'password_mismatch'): ?>
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 Las contraseñas no coinciden. Por favor, inténtelo de nuevo.
-                            <?php elseif ($error === 'terms_not_accepted'): ?>
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Debe aceptar los términos y condiciones para registrarse.
                             <?php elseif ($error === 'invalid_email'): ?>
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 Por favor, ingrese un email válido.
@@ -136,17 +151,34 @@
                             </div>
                         </div>
                         
-                        <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
-                            <label class="form-check-label" for="terms">Acepto los <a href="#" class="text-decoration-none">Términos y Condiciones</a></label>
+                        <?php if (isset($role) && $role === 'administrador'): ?>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="idRol" class="form-label">Rol de Usuario</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                    <select class="form-select" id="idRol" name="idRol" required>
+                                        <option value="2" selected>Producción (Acceso limitado)</option>
+                                        <option value="1">Administrador (Acceso completo)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
                         </div>
+                        <div class="row mb-3">
+                            
+                            <div class="col d-flex align-items-end">
+                                <div class="form-check mb-3 w-100">
+                                    <input type="checkbox" class="form-check-input" id="activo" name="activo" checked>
+                                    <label class="form-check-label" for="activo">Usuario Activo</label>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                         
                         <button type="submit" class="btn btn-success w-100">Registrarse</button>
                     </form>
                     
-                    <div class="text-center mt-3">
-                        <p>¿Ya tiene una cuenta? <a href="<?= BASE_URL ?>/auth/login">Inicie sesión aquí</a></p>
-                    </div>
                 </div>
             </div>
         </div>
