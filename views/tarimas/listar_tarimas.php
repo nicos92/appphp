@@ -52,6 +52,10 @@
                 </div>
                 <div class="row g-3 mt-2">
                     <div class="col-md-3">
+                        <label for="numero_producto" class="form-label">Número de Producto</label>
+                        <input type="text" class="form-control" id="numero_producto" name="numero_producto" value="<?= htmlspecialchars($filtros['numero_producto'] ?? ''); ?>" placeholder="Buscar por producto" maxlength="6">
+                    </div>
+                    <div class="col-md-3">
                         <label for="legajo" class="form-label">Legajo Usuario</label>
                         <input type="text" class="form-control" id="legajo" name="legajo" value="<?= htmlspecialchars($filtros['legajo'] ?? ''); ?>" placeholder="Buscar por legajo">
                     </div>
@@ -63,6 +67,8 @@
                         <label for="cantidad_cajas_min" class="form-label">Cajas Mínimas</label>
                         <input type="number" class="form-control" id="cantidad_cajas_min" name="cantidad_cajas_min" value="<?= htmlspecialchars($filtros['cantidad_cajas_min'] ?? ''); ?>" placeholder="Mínimo">
                     </div>
+                </div>
+                <div class="row g-3 mt-2">
                     <div class="col-md-3">
                         <label for="peso_min" class="form-label">Peso Mínimo (kg)</label>
                         <input type="number" step="0.01" class="form-control" id="peso_min" name="peso_min" value="<?= htmlspecialchars($filtros['peso_min'] ?? ''); ?>" placeholder="Mínimo">
@@ -86,6 +92,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <th>Número de Producto</th>
                             <th>Número de Tarima</th>
                             <th>Número de Usuario</th>
                             <th>Cantidad de Cajas</th>
@@ -104,6 +111,7 @@
                         <?php if (!empty($tarimas)): ?>
                             <?php foreach ($tarimas as $tarima): ?>
                                 <tr>
+                                    <td><?= htmlspecialchars($tarima['numero_producto'] ?? ''); ?></td>
                                     <td><?= htmlspecialchars($tarima['numero_tarima']); ?></td>
                                     <td><?= htmlspecialchars($tarima['numero_usuario']); ?></td>
                                     <td><?= htmlspecialchars($tarima['cantidad_cajas']); ?></td>
@@ -124,7 +132,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="<?php echo (isset($role) && ($role === 'administrador' || $role === 'jefe_produccion')) ? 10 : 9; ?>" class="text-center text-muted">No hay tarimas registradas aún.</td>
+                                <td colspan="<?php echo (isset($role) && ($role === 'administrador' || $role === 'jefe_produccion')) ? 11 : 10; ?>" class="text-center text-muted">No hay tarimas registradas aún.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

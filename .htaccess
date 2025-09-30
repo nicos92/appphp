@@ -1,4 +1,9 @@
 RewriteEngine On
+
+# Redireccionar la raíz del sitio al login
+RewriteRule ^$ public/index.php?ruta=auth/login [QSA,L]
+
+# Reglas de reescritura para rutas
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ public/index.php [QSA,L]

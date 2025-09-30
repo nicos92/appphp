@@ -24,9 +24,10 @@ class Tarima {
             }
         }
         
-        $stmt = $this->db->prepare("INSERT INTO tarimas (codigo_barras, numero_tarima, numero_usuario, cantidad_cajas, peso, numero_venta, descripcion, id_usuario, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+        $stmt = $this->db->prepare("INSERT INTO tarimas (codigo_barras, numero_producto, numero_tarima, numero_usuario, cantidad_cajas, peso, numero_venta, descripcion, id_usuario, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
         return $stmt->execute([
             $tarimaData['codigoBarras'],
+            $tarimaData['numeroProducto'],
             $tarimaData['numeroTarima'],
             $tarimaData['numeroUsuario'],
             $tarimaData['cantidadCajas'],
@@ -66,6 +67,7 @@ class Tarima {
     
     public function getTarimasFiltradas($filtros) {
         // Prepare parameters for the stored procedure
+        $numero_producto = !empty($filtros['numero_producto']) ? $filtros['numero_producto'] : null; // Limit to 6 characters
         $numero_tarima = !empty($filtros['numero_tarima']) ? $filtros['numero_tarima'] : null;
         $numero_usuario = !empty($filtros['numero_usuario']) ? $filtros['numero_usuario'] : null;
         $numero_venta = !empty($filtros['numero_venta']) ? $filtros['numero_venta'] : null;
@@ -76,15 +78,22 @@ class Tarima {
         $peso_min = !empty($filtros['peso_min']) && is_numeric($filtros['peso_min']) ? (float)$filtros['peso_min'] : null;
         
         // Limit empty string values to be treated as null
+        $numero_producto = ($numero_producto === '') ? null : $numero_producto;
         $numero_tarima = ($numero_tarima === '') ? null : $numero_tarima;
         $numero_usuario = ($numero_usuario === '') ? null : $numero_usuario;
         $numero_venta = ($numero_venta === '') ? null : $numero_venta;
         $legajo = ($legajo === '') ? null : $legajo;
         $nombre_usuario = ($nombre_usuario === '') ? null : $nombre_usuario;
         
-        $sql = "CALL FiltrarTarimas(?, ?, ?, ?, ?, ?, ?, ?)";
+        // Ensure numero_producto is exactly 6 chars max
+        if ($numero_producto !== null && strlen($numero_producto) > 6) {
+            $numero_producto = substr($numero_producto, 0, 6);
+        }
+        
+        $sql = "CALL FiltrarTarimas(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
+            $numero_producto,
             $numero_tarima,
             $numero_usuario,
             $numero_venta,

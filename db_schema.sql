@@ -54,6 +54,7 @@ CREATE TABLE usuarios (
 CREATE TABLE tarimas (
     id_tarima INT AUTO_INCREMENT PRIMARY KEY,
     codigo_barras VARCHAR(30) NOT NULL,
+    numero_producto VARCHAR(6) NOT NULL,
     numero_tarima VARCHAR(6) NOT NULL,
     numero_usuario VARCHAR(2) NOT NULL,
     cantidad_cajas INT NOT NULL,
@@ -113,14 +114,15 @@ INSERT INTO usuarios (username, email, password, first_name, last_name, legajo, 
 ('admin', 'admin@empresa.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'User', '001', 'Administración', 1, 1);
 
 -- Insertar una tarima de ejemplo
-INSERT INTO tarimas (codigo_barras, numero_tarima, numero_usuario, cantidad_cajas, peso, numero_venta, descripcion, id_usuario) VALUES
-('099999921296599980006045090774', '212965', '06', 45, 0907.74, '25-0774', 'Tarima de ejemplo creada con el código de barras completo', 1);
+INSERT INTO tarimas (codigo_barras, numero_producto, numero_tarima, numero_usuario, cantidad_cajas, peso, numero_venta, descripcion, id_usuario) VALUES
+('099999921296599980006045090774', '999999', '212965', '06', 45, 0907.74, '25-123456', 'Tarima de ejemplo creada con el código de barras completo', 1);
 
 -- Crear vista para mostrar tarimas con información del usuario
 CREATE VIEW vista_tarimas_con_legajo AS
 SELECT 
     t.id_tarima,
     t.numero_tarima,
+    t.numero_producto,
     t.numero_usuario,
     t.cantidad_cajas,
     t.peso,
@@ -136,6 +138,7 @@ LEFT JOIN usuarios u ON t.id_usuario = u.id_usuario;
 DELIMITER //
 
 CREATE PROCEDURE FiltrarTarimas(
+    IN p_numero_producto VARCHAR(6),
     IN p_numero_tarima VARCHAR(6),
     IN p_numero_usuario VARCHAR(2),
     IN p_numero_venta VARCHAR(10),
@@ -149,6 +152,7 @@ BEGIN
     SELECT 
         t.id_tarima,
         t.numero_tarima,
+        t.numero_producto,
         t.numero_usuario,
         t.cantidad_cajas,
         t.peso,
@@ -160,7 +164,8 @@ BEGIN
     FROM tarimas t
     LEFT JOIN usuarios u ON t.id_usuario = u.id_usuario
     WHERE 
-        (p_numero_tarima IS NULL OR p_numero_tarima = '' OR t.numero_tarima LIKE CONCAT('%', p_numero_tarima, '%'))
+        (p_numero_producto IS NULL OR p_numero_producto = '' OR t.numero_producto LIKE CONCAT('%', p_numero_producto, '%'))
+        AND (p_numero_tarima IS NULL OR p_numero_tarima = '' OR t.numero_tarima LIKE CONCAT('%', p_numero_tarima, '%'))
         AND (p_numero_usuario IS NULL OR p_numero_usuario = '' OR t.numero_usuario LIKE CONCAT('%', p_numero_usuario, '%'))
         AND (p_numero_venta IS NULL OR p_numero_venta = '' OR t.numero_venta LIKE CONCAT('%', p_numero_venta, '%'))
         AND (p_fecha_registro IS NULL OR DATE(t.fecha_registro) = p_fecha_registro)

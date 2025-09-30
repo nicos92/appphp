@@ -21,21 +21,32 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
-    
+
     <?php if (isset($error) && $error === 'required_fields_missing'): ?>
         <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>Los campos código de barras y número de tarima son obligatorios.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
-    
+
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="form-card">
                 <h3 class="mb-4">Formulario de Nueva Tarima</h3>
                 <p class="text-muted mb-4">Complete los campos siguientes para registrar una nueva tarima en el sistema</p>
-                
+
                 <form method="POST" action="<?= BASE_URL ?>/tarimas/guardar">
+                    <div class="d-flex mb-2 justify-content-start">
+                        <div>
+                            <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver al Panel
+                            </a>
+                            <a href="<?= BASE_URL ?>/tarimas" class="btn btn-outline-info me-2">
+                                <i class="fas fa-list me-2"></i>Ver Tarimas
+                            </a>
+                        </div>
+
+                    </div>
                     <div class="input-group has-validation mb-3">
                         <span class="input-group-text"><i class="fas fa-barcode"></i></span>
                         <input type="number" class="form-control" id="codigoBarras" name="codigoBarras" placeholder="Código de Barras" required step="1" oninput="limitLength(this, 30)">
@@ -43,24 +54,36 @@
                             El código de barras es requerido y debe tener máximo 30 dígitos.
                         </div>
                     </div>
-                    
-                    <div class="input-group has-validation mb-3">
-                        <span class="input-group-text"><i class="fas fa-warehouse"></i></span>
-                        <input type="number" class="form-control" id="numeroTarima" name="numeroTarima" placeholder="Número de Tarima" required step="1" oninput="limitLength(this, 6)">
-                        <div class="invalid-feedback">
-                            El número de tarima es requerido y debe tener máximo 6 dígitos.
-                        </div>
-                    </div>
-                    
-                    <div class="input-group has-validation mb-3">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input type="number" class="form-control" id="numeroUsuario" name="numeroUsuario" placeholder="Número de Usuario" required step="1" oninput="limitLength(this, 2)">
-                        <div class="invalid-feedback">
-                            El número de usuario es requerido y debe tener máximo 2 dígitos.
-                        </div>
-                    </div>
-                    
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group has-validation mb-3">
+                                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                <input type="number" class="form-control" id="numeroProducto" name="numeroProducto" placeholder="Número de Producto" required step="1" oninput="limitLength(this, 6)">
+                                <div class="invalid-feedback">
+                                    El número de producto es requerido y debe tener máximo 6 dígitos.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group has-validation mb-3">
+                                <span class="input-group-text"><i class="fas fa-warehouse"></i></span>
+                                <input type="number" class="form-control" id="numeroTarima" name="numeroTarima" placeholder="Número de Tarima" required step="1" oninput="limitLength(this, 6)">
+                                <div class="invalid-feedback">
+                                    El número de tarima es requerido y debe tener máximo 6 dígitos.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group has-validation mb-3">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="number" class="form-control" id="numeroUsuario" name="numeroUsuario" placeholder="Número de Usuario" required step="1" oninput="limitLength(this, 2)">
+                                <div class="invalid-feedback">
+                                    El número de usuario es requerido y debe tener máximo 2 dígitos.
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="input-group has-validation mb-3">
                                 <span class="input-group-text"><i class="fas fa-boxes"></i></span>
@@ -70,6 +93,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row">
+
                         <div class="col-md-6">
                             <div class="input-group has-validation mb-3">
                                 <span class="input-group-text"><i class="fas fa-weight"></i></span>
@@ -79,35 +106,27 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="input-group has-validation mb-3">
                                 <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" placeholder="25-XXXXXX" required pattern="25-\d{6}">
+                                <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" placeholder="XX-XXXXXX" required pattern="25-\d{6}">
                                 <div class="invalid-feedback">
                                     El número de venta debe seguir el formato 25-XXXXXX (25- seguido de 6 dígitos).
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
+
+
                     <div class="mb-3">
                         <label for="descripcion" class="form-label">Descripción</label>
                         <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Descripción adicional de la tarima"></textarea>
                     </div>
-                    
+
                     <div class="d-flex justify-content-between">
-                        <div>
-                            <a href="<?= BASE_URL ?>/tarimas" class="btn btn-outline-info me-2">
-                                <i class="fas fa-list me-2"></i>Ver Tarimas
-                            </a>
-                            <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Volver al Panel
-                            </a>
-                        </div>
-                        <button type="submit" class="btn btn-submit btn-lg">
+
+                        <button type="submit" class="btn btn-submit btn-lg btn-focus-animation">
                             <i class="fas fa-save me-2"></i>Guardar Tarima
                         </button>
                     </div>
@@ -121,12 +140,21 @@
     function limitLength(input, maxLength) {
         // Get the value as a string
         let value = input.value.toString();
-        
+
         // For number inputs, only allow digits
-        value = value.replace(/[^0-9]/g, '');
-        
+        if (input.type === 'number') {
+            value = value.replace(/[^0-9]/g, '');
+        }
+
+        // For text inputs like numeroVenta, allow digits and hyphen
+        if (input.id === 'numeroVenta') {
+            value = value.replace(/[^0-9\-]/g, '');
+        }
+
         // For number inputs, check against max value instead of length
-        if (input.id === 'numeroTarima' && value.length > maxLength) {
+        if (input.id === 'numeroProducto' && value.length > maxLength) {
+            value = value.substring(0, maxLength);
+        } else if (input.id === 'numeroTarima' && value.length > maxLength) {
             value = value.substring(0, maxLength);
         } else if (input.id === 'numeroUsuario' && value.length > maxLength) {
             value = value.substring(0, maxLength);
@@ -138,83 +166,87 @@
             if (!isNaN(numValue) && numValue > 9999.99) {
                 value = '9999.99';
             }
+        } else if (input.id === 'numeroVenta' && value.length > maxLength) {
+            value = value.substring(0, maxLength);
         }
-        
+
         // Set the value back to the input
         input.value = value;
     }
-    
-    // Specific function for barcode formatting
-    function formatBarcode(input) {
-        let value = input.value.toString();
+
+    // Add event listeners to number inputs to enforce length limits
+    document.getElementById('codigoBarras').addEventListener('input', function() {
+        let value = this.value.toString();
         // Only allow digits
         value = value.replace(/[^0-9]/g, '');
-        
-        // Enforce the specific format: 0999999xxxxxx9998xxxxxxxxxxxxx
-        // This format seems to suggest a specific structure:
-        // 0 + 999999 (fixed) + 6 variable digits + 9998 (fixed) + 13 variable digits = 30 total
+
+        // Check if input is longer than 30 digits
         if (value.length > 30) {
             value = value.substring(0, 30);
         }
-        
-        // Ensure the fixed parts are correct
-        if (value.length >= 7) {
-            // Ensure positions 0-6 are "0999999"
-            value = "0999999" + value.substring(7);
-        }
-        
-        if (value.length >= 13) {
-            // Ensure positions 7-12 are user-entered, then position 13-16 is "9998"
-            if (value.substring(13, 17) !== "9998") {
-                value = value.substring(0, 13) + "9998" + value.substring(17);
-            }
-        }
-        
-        input.value = value;
-    }
-    
-    // Add event listeners to number inputs to enforce length limits
-    document.getElementById('codigoBarras').addEventListener('input', function() {
-        formatBarcode(this);
+
+        // Update the input value
+        this.value = value;
     });
-    
+
+    // Add event listener to numeroVenta to enforce length limit
+    document.getElementById('numeroVenta').addEventListener('input', function() {
+        if (this.value.length > 9) {
+            this.value = this.value.substring(0, 9);
+        }
+    });
+
     // Also validate on form submission
     document.querySelector('form').addEventListener('submit', function(e) {
         const codigoBarras = document.getElementById('codigoBarras').value;
+        const numeroProducto = document.getElementById('numeroProducto').value;
         const numeroTarima = document.getElementById('numeroTarima').value;
         const numeroUsuario = document.getElementById('numeroUsuario').value;
         const cantidadCajas = document.getElementById('cantidadCajas').value;
         const peso = document.getElementById('peso').value;
         const numeroVenta = document.getElementById('numeroVenta').value;
-        
+
         if (codigoBarras.length > 30) {
             e.preventDefault();
             alert('El código de barras no puede tener más de 30 dígitos.');
             document.getElementById('codigoBarras').focus();
             return false;
         }
-        
+
+        if (numeroProducto.length > 6) {
+            e.preventDefault();
+            alert('El número de producto no puede tener más de 6 dígitos.');
+            document.getElementById('numeroProducto').focus();
+            return false;
+        }
+
         if (numeroTarima.length > 6) {
             e.preventDefault();
             alert('El número de tarima no puede tener más de 6 dígitos.');
             document.getElementById('numeroTarima').focus();
             return false;
         }
-        
+
         if (numeroUsuario.length > 2) {
             e.preventDefault();
             alert('El número de usuario no puede tener más de 2 dígitos.');
             document.getElementById('numeroUsuario').focus();
             return false;
         }
-        
+
         if (cantidadCajas.length > 3) {
             e.preventDefault();
             alert('La cantidad de cajas no puede tener más de 3 dígitos.');
             document.getElementById('cantidadCajas').focus();
             return false;
         }
-        
+        if (numeroVenta.length > 9) {
+            e.preventDefault();
+            alert('El número de venta no puede tener más de 9 caracteres.');
+            document.getElementById('numeroVenta').focus();
+            return false;
+        }
+
         const pesoFloat = parseFloat(peso);
         if (pesoFloat > 9999.99) {
             e.preventDefault();
@@ -222,7 +254,7 @@
             document.getElementById('peso').focus();
             return false;
         }
-        
+
         // Validate venta number format
         const ventaRegex = /^25-\d{6}$/;
         if (!ventaRegex.test(numeroVenta)) {
@@ -232,7 +264,7 @@
             return false;
         }
     });
-    
+
     // Focus on barcode input when success message is shown
     document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -240,34 +272,51 @@
             // Clear the URL parameter to avoid focus on refresh
             const cleanUrl = window.location.href.split('?')[0];
             window.history.replaceState({}, document.title, cleanUrl);
-            
+
             // Focus on the barcode input after a short delay to allow UI to update
             setTimeout(function() {
                 document.getElementById('codigoBarras').focus();
             }, 100);
         }
     });
-    
+
     // When barcode reaches 30 characters, fill other fields with non-fixed parts
     document.getElementById('codigoBarras').addEventListener('input', function() {
         const value = this.value.toString();
-        
+
+        // Extract and fill the product number with digits 2-8 of the barcode
+        if (value.length >= 8) {
+            const numeroProducto = value.substring(1, 7); // positions 1-7 (digits 2-8)
+            document.getElementById('numeroProducto').value = numeroProducto;
+        }
+
         if (value.length === 30) {
+            // Check if the barcode has the fixed parts
+            if (value.charAt(0) !== '0') {
+                alert('El código de barras debe iniciar con 0');
+                return;
+            }
+
+            if (value.substring(13, 17) !== "9998") {
+                alert('El código de barras no pertenece a una tarima');
+                return;
+            }
+
             // Extract the variable parts:
-            // Positions 7-12 (6 digits) for user input after "0999999"
+            // Positions 7-12 (6 digits) for user input after first 7 digits
             const userPart1 = value.substring(7, 13); // positions 7-12
             // Positions 17-29 (13 digits) for user input after "9998"
             const userPart2 = value.substring(17, 30); // positions 17-29
-            
+
             // Fill other fields with parts of the barcode
             document.getElementById('numeroTarima').value = userPart1;
-            
+
             // For numeroUsuario (2 digits max): use first 2 digits of userPart2
             document.getElementById('numeroUsuario').value = userPart2.substring(2, 4);
-            
+
             // For cantidadCajas (3 digits max): use positions 4-6 of userPart2 (positions 21-23 of barcode)
             document.getElementById('cantidadCajas').value = userPart2.substring(4, 7);
-            
+
             // For peso: use the last 6 digits of the barcode (positions 24-29), 4 for whole part and 2 for decimal
             const lastSixDigits = value.substring(24, 30); // positions 24-29 (last 6 digits)
             if (lastSixDigits.length === 6) {
@@ -275,13 +324,34 @@
                 const decimalPart = lastSixDigits.substring(4, 6); // last 2 digits
                 document.getElementById('peso').value = wholePart + '.' + decimalPart;
             }
-            
+
             // For numeroVenta: use positions 8-9 of userPart2 (positions 25-26 of barcode) with format 25-XXXXXX
             const ventaPart = userPart2.substring(8, 10);
             document.getElementById('numeroVenta').value = "25-" + ventaPart.padEnd(6, '0');
-            
+
             // Set focus to numeroVenta field
             document.getElementById('numeroVenta').focus();
         }
     });
 </script>
+/* CSS for the focus and hover animation */
+<style>
+    .btn-focus-animation {
+        transition: box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-focus-animation:focus {
+        box-shadow: 0 0 0 0.5rem rgba(13, 110, 253, 0.25), 0 0 15px rgba(13, 110, 253, 0.5) !important;
+        outline: none;
+    }
+
+    .btn-focus-animation:hover {
+        box-shadow: 0 0 0 0.5rem rgba(13, 110, 253, 0.25), 0 0 15px rgba(13, 110, 253, 0.5);
+    }
+
+    .btn-focus-animation:active {
+        box-shadow: 0 0 0 0.5rem rgba(13, 110, 253, 0.25), 0 0 8px rgba(13, 110, 253, 0.7) !important;
+    }
+</style>

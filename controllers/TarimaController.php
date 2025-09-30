@@ -46,6 +46,7 @@ class TarimaController extends Controller {
 
         $tarimaData = [
             'codigoBarras' => filter_var(trim($_POST['codigoBarras']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'numeroProducto' => filter_var(trim($_POST['numeroProducto']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
             'numeroTarima' => filter_var(trim($_POST['numeroTarima']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
             'numeroUsuario' => filter_var(trim($_POST['numeroUsuario']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
             'cantidadCajas' => filter_var(trim($_POST['cantidadCajas']), FILTER_VALIDATE_INT) ? (int)$_POST['cantidadCajas'] : 0,
@@ -109,6 +110,7 @@ class TarimaController extends Controller {
         
         // Recoger parámetros de filtro
         $filtros = [
+            'numero_producto' => $_GET['numero_producto'] ?? '',
             'numero_tarima' => $_GET['numero_tarima'] ?? '',
             'numero_usuario' => $_GET['numero_usuario'] ?? '',
             'numero_venta' => $_GET['numero_venta'] ?? '',
