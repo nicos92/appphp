@@ -67,6 +67,14 @@
                     </div>
                     
                     <div class="input-group has-validation mb-3">
+                        <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                        <input type="number" class="form-control" id="numeroProducto" name="numeroProducto" value="<?= htmlspecialchars($tarima['numero_producto']); ?>" required step="1" oninput="limitLength(this, 6)">
+                        <div class="invalid-feedback">
+                            El número de producto es requerido y debe tener máximo 6 dígitos.
+                        </div>
+                    </div>
+                    
+                    <div class="input-group has-validation mb-3">
                         <span class="input-group-text"><i class="fas fa-warehouse"></i></span>
                         <input type="number" class="form-control" id="numeroTarima" name="numeroTarima" value="<?= htmlspecialchars($tarima['numero_tarima']); ?>" required step="1" oninput="limitLength(this, 6)">
                         <div class="invalid-feedback">
@@ -151,7 +159,9 @@
         value = value.replace(/[^0-9]/g, '');
         
         // For number inputs, check against max value instead of length
-        if (input.id === 'numeroTarima' && value.length > maxLength) {
+        if (input.id === 'numeroProducto' && value.length > maxLength) {
+            value = value.substring(0, maxLength);
+        } else if (input.id === 'numeroTarima' && value.length > maxLength) {
             value = value.substring(0, maxLength);
         } else if (input.id === 'numeroUsuario' && value.length > maxLength) {
             value = value.substring(0, maxLength);
