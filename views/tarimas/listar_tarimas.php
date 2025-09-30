@@ -35,15 +35,15 @@
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label for="numero_producto" class="form-label">Número de Producto</label>
-                        <input type="text" class="form-control" id="numero_producto" name="numero_producto" value="<?= htmlspecialchars($filtros['numero_producto'] ?? ''); ?>" placeholder="Buscar por producto" maxlength="6">
+                        <input type="number" class="form-control" id="numero_producto" name="numero_producto" value="<?= htmlspecialchars($filtros['numero_producto'] ?? ''); ?>" placeholder="Buscar por producto" maxlength="6">
                     </div>
                     <div class="col-md-3">
                         <label for="numero_tarima" class="form-label">Número de Tarima</label>
-                        <input type="text" class="form-control" id="numero_tarima" name="numero_tarima" value="<?= htmlspecialchars($filtros['numero_tarima'] ?? ''); ?>" placeholder="Buscar por número">
+                        <input type="number" class="form-control" id="numero_tarima" name="numero_tarima" value="<?= htmlspecialchars($filtros['numero_tarima'] ?? ''); ?>" placeholder="Buscar por número">
                     </div>
                     <div class="col-md-3">
                         <label for="numero_usuario" class="form-label">Número de Usuario</label>
-                        <input type="text" class="form-control" id="numero_usuario" name="numero_usuario" value="<?= htmlspecialchars($filtros['numero_usuario'] ?? ''); ?>" placeholder="Buscar por usuario">
+                        <input type="number" class="form-control" id="numero_usuario" name="numero_usuario" value="<?= htmlspecialchars($filtros['numero_usuario'] ?? ''); ?>" placeholder="Buscar por usuario">
                     </div>
                     <div class="col-md-3">
                         <label for="numero_venta" class="form-label">Número de Venta</label>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-md-3">
                         <label for="legajo" class="form-label">Legajo Usuario</label>
-                        <input type="text" class="form-control" id="legajo" name="legajo" value="<?= htmlspecialchars($filtros['legajo'] ?? ''); ?>" placeholder="Buscar por legajo">
+                        <input type="number" class="form-control" id="legajo" name="legajo" value="<?= htmlspecialchars($filtros['legajo'] ?? ''); ?>" placeholder="Buscar por legajo">
                     </div>
                     <div class="col-md-3">
                         <label for="nombre_usuario" class="form-label">Nombre Usuario</label>
