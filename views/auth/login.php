@@ -42,6 +42,9 @@
                             <?php elseif ($error === 'empty_fields'): ?>
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 Por favor, complete todos los campos.
+                            <?php elseif ($error === 'inactive_user'): ?>
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                El usuario está inactivo. Por favor, contacte con el administrador.
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>

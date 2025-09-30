@@ -35,6 +35,12 @@ class AuthController extends Controller {
         $user = $this->usuarioModel->getByUsername($username);
 
         if ($user && password_verify($password, $user['password'])) {
+            // Verificar si el usuario está activo
+            if ($user['activo'] == 0) {
+                $this->redirect('auth/login?error=inactive_user');
+                return;
+            }
+            
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }

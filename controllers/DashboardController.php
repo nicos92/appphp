@@ -126,7 +126,9 @@ class DashboardController extends Controller {
             'legajo' => trim($_POST['legajo']),
             'department' => $_POST['department'],
             'idRol' => (int)($_POST['idRol'] ?? 2),
-            'activo' => isset($_POST['activo']) ? 1 : 0
+            'activo' => isset($_POST['activo']) ? 1 : 0,
+            'newPassword' => trim($_POST['newPassword'] ?? ''),
+            'confirmPassword' => trim($_POST['confirmPassword'] ?? '')
         ];
 
         // Validaciones...
@@ -153,24 +155,69 @@ class DashboardController extends Controller {
             return;
         }
 
-        $stmt = $this->usuarioModel->getConnection()->prepare("
-            UPDATE usuarios
-            SET first_name = ?, last_name = ?, email = ?, username = ?, legajo = ?,
-                department = ?, id_rol = ?, activo = ?
-            WHERE id_usuario = ?
-        ");
-        
-        $result = $stmt->execute([
-            $usuarioData['firstName'],
-            $usuarioData['lastName'],
-            $usuarioData['email'],
-            $usuarioData['username'],
-            $usuarioData['legajo'],
-            $usuarioData['department'],
-            $usuarioData['idRol'],
-            $usuarioData['activo'],
-            $usuarioData['id']
-        ]);
+        // Si se proporciona una nueva contraseña, validarla
+        if (!empty($usuarioData['newPassword']) || !empty($usuarioData['confirmPassword'])) {
+            // Verificar que ambas contraseñas estén presentes y coincidan
+            if (empty($usuarioData['newPassword']) || empty($usuarioData['confirmPassword'])) {
+                $this->redirect('dashboard/editar_usuario/' . $id . '?error=empty_password_fields');
+                return;
+            }
+            
+            if ($usuarioData['newPassword'] !== $usuarioData['confirmPassword']) {
+                $this->redirect('dashboard/editar_usuario/' . $id . '?error=password_mismatch');
+                return;
+            }
+            
+            // Validar la contraseña
+            if (strlen($usuarioData['newPassword']) < 6) {
+                $this->redirect('dashboard/editar_usuario/' . $id . '?error=weak_password');
+                return;
+            }
+            
+            // Encriptar la contraseña
+            $usuarioData['newPassword'] = password_hash($usuarioData['newPassword'], PASSWORD_DEFAULT);
+            
+            // Actualizar con contraseña incluida
+            $stmt = $this->usuarioModel->getConnection()->prepare("
+                UPDATE usuarios
+                SET first_name = ?, last_name = ?, email = ?, username = ?, legajo = ?,
+                    department = ?, id_rol = ?, activo = ?, password = ?
+                WHERE id_usuario = ?
+            ");
+            
+            $result = $stmt->execute([
+                $usuarioData['firstName'],
+                $usuarioData['lastName'],
+                $usuarioData['email'],
+                $usuarioData['username'],
+                $usuarioData['legajo'],
+                $usuarioData['department'],
+                $usuarioData['idRol'],
+                $usuarioData['activo'],
+                $usuarioData['newPassword'],
+                $usuarioData['id']
+            ]);
+        } else {
+            // Actualizar sin cambiar contraseña
+            $stmt = $this->usuarioModel->getConnection()->prepare("
+                UPDATE usuarios
+                SET first_name = ?, last_name = ?, email = ?, username = ?, legajo = ?,
+                    department = ?, id_rol = ?, activo = ?
+                WHERE id_usuario = ?
+            ");
+            
+            $result = $stmt->execute([
+                $usuarioData['firstName'],
+                $usuarioData['lastName'],
+                $usuarioData['email'],
+                $usuarioData['username'],
+                $usuarioData['legajo'],
+                $usuarioData['department'],
+                $usuarioData['idRol'],
+                $usuarioData['activo'],
+                $usuarioData['id']
+            ]);
+        }
         
         if ($result) {
             $this->redirect('dashboard/usuarios?success=usuario_actualizado');

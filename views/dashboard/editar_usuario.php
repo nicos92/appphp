@@ -36,6 +36,15 @@
                             <?php elseif ($_GET['error'] === 'update_failed'): ?>
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 Error al actualizar la información del usuario. Por favor, inténtelo de nuevo.
+                            <?php elseif ($_GET['error'] === 'empty_password_fields'): ?>
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Para cambiar la contraseña, debe completar ambos campos de contraseña.
+                            <?php elseif ($_GET['error'] === 'password_mismatch'): ?>
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Las contraseñas no coinciden. Por favor, inténtelo de nuevo.
+                            <?php elseif ($_GET['error'] === 'weak_password'): ?>
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                La contraseña debe tener al menos 6 caracteres.
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
@@ -136,7 +145,7 @@
                                         <label for="newPassword" class="form-label">Nueva Contraseña</label>
                                         <div class="input-group position-relative">
                                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                            <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Nueva Contraseña">
+                                            <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Dejar en blanco para mantener actual">
                                             <button type="button" class="password-toggle position-absolute end-0 top-50 translate-middle-y pe-3 border-0 bg-transparent" style="cursor: pointer; z-index: 5;" onclick="togglePassword('newPassword', 'newPasswordToggle')" aria-label="Mostrar/Ocultar contraseña">
                                                 <i id="newPasswordToggle" class="fas fa-eye-slash"></i>
                                             </button>
@@ -148,7 +157,7 @@
                                         <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
                                         <div class="input-group position-relative">
                                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirmar Nueva Contraseña">
+                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Dejar en blanco para mantener actual">
                                             <button type="button" class="password-toggle position-absolute end-0 top-50 translate-middle-y pe-3 border-0 bg-transparent" style="cursor: pointer; z-index: 5;" onclick="togglePassword('confirmPassword', 'confirmPasswordToggle')" aria-label="Mostrar/Ocultar confirmación de contraseña">
                                                 <i id="confirmPasswordToggle" class="fas fa-eye-slash"></i>
                                             </button>
