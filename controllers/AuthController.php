@@ -12,6 +12,12 @@ class AuthController extends Controller {
     }
 
     public function showLogin() {
+        // Si ya hay un usuario logueado, redirigir al dashboard
+        if ($this->isLoggedIn()) {
+            $this->redirect('dashboard');
+            return;
+        }
+        
         $this->view('auth/login', ['error' => $_GET['error'] ?? null]);
     }
 

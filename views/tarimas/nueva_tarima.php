@@ -265,19 +265,14 @@
         }
     });
 
-    // Focus on barcode input when success message is shown
+    // Focus on barcode input when page loads or success message is shown
     document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('success') === 'entity_created') {
-            // Clear the URL parameter to avoid focus on refresh
-            const cleanUrl = window.location.href.split('?')[0];
-            window.history.replaceState({}, document.title, cleanUrl);
-
-            // Focus on the barcode input after a short delay to allow UI to update
-            setTimeout(function() {
-                document.getElementById('codigoBarras').focus();
-            }, 100);
-        }
+        
+        // Focus on the barcode input after a short delay to allow UI to update
+        setTimeout(function() {
+            document.getElementById('codigoBarras').focus();
+        }, 100);
     });
 
     // When barcode reaches 30 characters, fill other fields with non-fixed parts
@@ -325,16 +320,26 @@
                 document.getElementById('peso').value = wholePart + '.' + decimalPart;
             }
 
-            // For numeroVenta: use positions 8-9 of userPart2 (positions 25-26 of barcode) with format 25-XXXXXX
-            const ventaPart = userPart2.substring(8, 10);
-            document.getElementById('numeroVenta').value = "25-" + ventaPart.padEnd(6, '0');
-
+            // For numeroVenta: only set the current year (last 2 digits) with a dash, leave rest for user to enter
+            const currentYear = new Date().getFullYear().toString().substr(-2);
+            document.getElementById('numeroVenta').value = currentYear + "-";
+            
             // Set focus to numeroVenta field
             document.getElementById('numeroVenta').focus();
         }
     });
+    
+    // Auto-close success message after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const successAlert = document.querySelector('.alert.alert-success');
+        if (successAlert) {
+            setTimeout(function() {
+                const alert = new bootstrap.Alert(successAlert);
+                alert.close();
+            }, 5000); // 5 seconds
+        }
+    });
 </script>
-/* CSS for the focus and hover animation */
 <style>
     .btn-focus-animation {
         transition: box-shadow 0.3s ease;
