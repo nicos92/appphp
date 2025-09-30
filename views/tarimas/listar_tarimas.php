@@ -19,20 +19,24 @@
         <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; ">
             <h3 class="mb-0">Inventario de Tarimas</h3>
             <div>
-                <a href="<?= BASE_URL ?>/tarimas/nueva_tarima" class="btn btn-light me-2">
+                <a href="<?= BASE_URL ?>/tarimas/nueva_tarima" class="btn btn-light me-2 m-2">
                     <i class="fas fa-plus me-2"></i>Nueva Tarima
                 </a>
-                <a href="<?= BASE_URL ?>/dashboard" class="btn btn-light">
+                <a href="<?= BASE_URL ?>/dashboard" class="btn btn-light m-2">
                     <i class="fas fa-arrow-left me-2"></i>Volver al Panel
                 </a>
             </div>
         </div>
-        
+
         <!-- Sección de filtrado -->
         <div class="card-body border-bottom">
             <h5 class="mb-3"><i class="fas fa-filter me-2"></i>Filtros de Búsqueda</h5>
             <form id="filtroTarimas" method="GET" action="<?= BASE_URL ?>/tarimas">
                 <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="numero_producto" class="form-label">Número de Producto</label>
+                        <input type="text" class="form-control" id="numero_producto" name="numero_producto" value="<?= htmlspecialchars($filtros['numero_producto'] ?? ''); ?>" placeholder="Buscar por producto" maxlength="6">
+                    </div>
                     <div class="col-md-3">
                         <label for="numero_tarima" class="form-label">Número de Tarima</label>
                         <input type="text" class="form-control" id="numero_tarima" name="numero_tarima" value="<?= htmlspecialchars($filtros['numero_tarima'] ?? ''); ?>" placeholder="Buscar por número">
@@ -45,15 +49,12 @@
                         <label for="numero_venta" class="form-label">Número de Venta</label>
                         <input type="text" class="form-control" id="numero_venta" name="numero_venta" value="<?= htmlspecialchars($filtros['numero_venta'] ?? ''); ?>" placeholder="Buscar por venta">
                     </div>
-                    <div class="col-md-3">
-                        <label for="fecha_registro" class="form-label">Fecha de Registro</label>
-                        <input type="date" class="form-control" id="fecha_registro" name="fecha_registro" value="<?= htmlspecialchars($filtros['fecha_registro'] ?? ''); ?>">
-                    </div>
+
                 </div>
                 <div class="row g-3 mt-2">
                     <div class="col-md-3">
-                        <label for="numero_producto" class="form-label">Número de Producto</label>
-                        <input type="text" class="form-control" id="numero_producto" name="numero_producto" value="<?= htmlspecialchars($filtros['numero_producto'] ?? ''); ?>" placeholder="Buscar por producto" maxlength="6">
+                        <label for="fecha_registro" class="form-label">Fecha de Registro</label>
+                        <input type="date" class="form-control" id="fecha_registro" name="fecha_registro" value="<?= htmlspecialchars($filtros['fecha_registro'] ?? ''); ?>">
                     </div>
                     <div class="col-md-3">
                         <label for="legajo" class="form-label">Legajo Usuario</label>
@@ -86,7 +87,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
@@ -103,7 +104,7 @@
                             <th>Fecha de Registro</th>
                             <th>Descripción</th>
                             <?php if (isset($role) && $role === 'administrador'): ?>
-                            <th>Acciones</th>
+                                <th>Acciones</th>
                             <?php endif; ?>
                         </tr>
                     </thead>
@@ -122,11 +123,11 @@
                                     <td><?= htmlspecialchars($tarima['fecha_registro']); ?></td>
                                     <td><?= htmlspecialchars($tarima['descripcion'] ?? ''); ?></td>
                                     <?php if (isset($role) && ($role === 'administrador' || $role === 'jefe_produccion')): ?>
-                                    <td>
-                                        <a href="<?= BASE_URL ?>/tarimas/editar_tarima/<?= $tarima['id_tarima']; ?>" class="btn btn-sm btn-outline-warning" title="Editar tarima">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
+                                        <td>
+                                            <a href="<?= BASE_URL ?>/tarimas/editar_tarima/<?= $tarima['id_tarima']; ?>" class="btn btn-sm btn-outline-warning" title="Editar tarima">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
@@ -143,18 +144,19 @@
 </div>
 
 <script>
-function limpiarFiltros() {
-    // Limpiar todos los campos de filtro
-    document.getElementById('numero_tarima').value = '';
-    document.getElementById('numero_usuario').value = '';
-    document.getElementById('numero_venta').value = '';
-    document.getElementById('fecha_registro').value = '';
-    document.getElementById('legajo').value = '';
-    document.getElementById('nombre_usuario').value = '';
-    document.getElementById('cantidad_cajas_min').value = '';
-    document.getElementById('peso_min').value = '';
-    
-    // Enviar el formulario para actualizar la lista sin filtros
-    document.getElementById('filtroTarimas').submit();
-}
+    function limpiarFiltros() {
+        // Limpiar todos los campos de filtro
+        document.getElementById('numero_producto').value = '';
+        document.getElementById('numero_tarima').value = '';
+        document.getElementById('numero_usuario').value = '';
+        document.getElementById('numero_venta').value = '';
+        document.getElementById('fecha_registro').value = '';
+        document.getElementById('legajo').value = '';
+        document.getElementById('nombre_usuario').value = '';
+        document.getElementById('cantidad_cajas_min').value = '';
+        document.getElementById('peso_min').value = '';
+
+        // Enviar el formulario para actualizar la lista sin filtros
+        document.getElementById('filtroTarimas').submit();
+    }
 </script>

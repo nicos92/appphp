@@ -67,28 +67,26 @@ class Tarima {
     
     public function getTarimasFiltradas($filtros) {
         // Prepare parameters for the stored procedure
-        $numero_producto = !empty($filtros['numero_producto']) ? $filtros['numero_producto'] : null; // Limit to 6 characters
-        $numero_tarima = !empty($filtros['numero_tarima']) ? $filtros['numero_tarima'] : null;
-        $numero_usuario = !empty($filtros['numero_usuario']) ? $filtros['numero_usuario'] : null;
-        $numero_venta = !empty($filtros['numero_venta']) ? $filtros['numero_venta'] : null;
-        $fecha_registro = !empty($filtros['fecha_registro']) ? $filtros['fecha_registro'] : null;
-        $legajo = !empty($filtros['legajo']) ? $filtros['legajo'] : null;
-        $nombre_usuario = !empty($filtros['nombre_usuario']) ? $filtros['nombre_usuario'] : null;
-        $cantidad_cajas_min = !empty($filtros['cantidad_cajas_min']) && is_numeric($filtros['cantidad_cajas_min']) ? (int)$filtros['cantidad_cajas_min'] : null;
-        $peso_min = !empty($filtros['peso_min']) && is_numeric($filtros['peso_min']) ? (float)$filtros['peso_min'] : null;
+        $numero_producto = isset($filtros['numero_producto']) ? $filtros['numero_producto'] : null;
+        $numero_tarima = isset($filtros['numero_tarima']) ? $filtros['numero_tarima'] : null;
+        $numero_usuario = isset($filtros['numero_usuario']) ? $filtros['numero_usuario'] : null;
+        $numero_venta = isset($filtros['numero_venta']) ? $filtros['numero_venta'] : null;
+        $fecha_registro = isset($filtros['fecha_registro']) ? $filtros['fecha_registro'] : null;
+        $legajo = isset($filtros['legajo']) ? $filtros['legajo'] : null;
+        $nombre_usuario = isset($filtros['nombre_usuario']) ? $filtros['nombre_usuario'] : null;
+        $cantidad_cajas_min = isset($filtros['cantidad_cajas_min']) && is_numeric($filtros['cantidad_cajas_min']) ? (int)$filtros['cantidad_cajas_min'] : null;
+        $peso_min = isset($filtros['peso_min']) && is_numeric($filtros['peso_min']) ? (float)$filtros['peso_min'] : null;
         
-        // Limit empty string values to be treated as null
-        $numero_producto = ($numero_producto === '') ? null : $numero_producto;
-        $numero_tarima = ($numero_tarima === '') ? null : $numero_tarima;
-        $numero_usuario = ($numero_usuario === '') ? null : $numero_usuario;
-        $numero_venta = ($numero_venta === '') ? null : $numero_venta;
-        $legajo = ($legajo === '') ? null : $legajo;
-        $nombre_usuario = ($nombre_usuario === '') ? null : $nombre_usuario;
+        // Ensure all string parameters are properly sanitized and limited in length
+        $numero_producto = ($numero_producto !== null && $numero_producto !== '') ? substr(trim($numero_producto), 0, 6) : null;
+        $numero_tarima = ($numero_tarima !== null && $numero_tarima !== '') ? substr(trim($numero_tarima), 0, 6) : null;
+        $numero_usuario = ($numero_usuario !== null && $numero_usuario !== '') ? substr(trim($numero_usuario), 0, 2) : null;
+        $numero_venta = ($numero_venta !== null && $numero_venta !== '') ? substr(trim($numero_venta), 0, 10) : null;
+        $legajo = ($legajo !== null && $legajo !== '') ? substr(trim($legajo), 0, 20) : null;
+        $nombre_usuario = ($nombre_usuario !== null && $nombre_usuario !== '') ? substr(trim($nombre_usuario), 0, 101) : null;
         
-        // Ensure numero_producto is exactly 6 chars max
-        if ($numero_producto !== null && strlen($numero_producto) > 6) {
-            $numero_producto = substr($numero_producto, 0, 6);
-        }
+        // Handle date parameter - convert empty string to null
+        $fecha_registro = ($fecha_registro !== null && $fecha_registro !== '') ? $fecha_registro : null;
         
         $sql = "CALL FiltrarTarimas(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
