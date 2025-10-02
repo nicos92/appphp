@@ -121,7 +121,22 @@ class TarimaController extends Controller {
             'peso_min' => $_GET['peso_min'] ?? ''
         ];
         
-        $tarimas = $this->tarimaModel->getTarimasFiltradas($filtros);
+        // Check if all filters are empty (no filter applied)
+        $hasFilters = false;
+        foreach ($filtros as $filtro) {
+            if ($filtro !== '') {
+                $hasFilters = true;
+                break;
+            }
+        }
+        
+        if (!$hasFilters) {
+            // No filters applied, get today's last 1000 tarimas
+            $tarimas = $this->tarimaModel->getTodayLastTarimas(1000);
+        } else {
+            // Filters applied, use the filtered method
+            $tarimas = $this->tarimaModel->getTarimasFiltradas($filtros);
+        }
         
         $data = [
             'username' => $_SESSION['username'],

@@ -53,6 +53,22 @@ class Tarima {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    public function getTodayLastTarimas($limit = 1000) {
+        // Validar y asegurar que el límite sea un número entero positivo
+        $limit = (int)$limit;
+        if ($limit <= 0) {
+            $limit = 1000; // Valor por defecto
+        }
+        
+        // Establecer un límite máximo para evitar problemas de rendimiento
+        $limit = min($limit, 10000); // Límite máximo de 10,000 para evitar problemas de rendimiento
+        
+        $today = date('Y-m-d');
+        $stmt = $this->db->prepare("SELECT * FROM vista_tarimas_con_legajo WHERE DATE(fecha_registro) = ? ORDER BY fecha_registro DESC LIMIT " . $limit);
+        $stmt->execute([$today]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     public function getTotalTarimas() {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM tarimas");
         $stmt->execute();
