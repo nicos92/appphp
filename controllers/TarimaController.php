@@ -130,7 +130,13 @@ class TarimaController extends Controller {
             }
         }
         
-        if (!$hasFilters) {
+        // Check if 'all' parameter is present to show last 1000 tarimas without date restriction
+        $showAll = isset($_GET['all']) && $_GET['all'] === '1';
+        
+        if ($showAll) {
+            // Show last 1000 tarimas without date restriction
+            $tarimas = $this->tarimaModel->getLastTarimas(1000);
+        } elseif (!$hasFilters) {
             // No filters applied, get today's last 1000 tarimas
             $tarimas = $this->tarimaModel->getTodayLastTarimas(1000);
         } else {

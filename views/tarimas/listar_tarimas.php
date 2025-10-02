@@ -80,9 +80,12 @@
                         <button type="submit" class="btn btn-primary me-2">
                             <i class="fas fa-search me-2"></i>Filtrar
                         </button>
-                        <button type="button" class="btn btn-outline-secondary" onclick="limpiarFiltros()">
+                        <button type="button" class="btn btn-outline-secondary me-2" onclick="limpiarFiltros()">
                             <i class="fas fa-eraser me-2"></i>Limpiar Filtros
                         </button>
+                        <a href="<?= BASE_URL ?>/tarimas?all=1" class="btn btn-success">
+                            <i class="fas fa-list me-2"></i>Ver Últimas 1000 Tarimas
+                        </a>
                     </div>
                 </div>
             </form>
