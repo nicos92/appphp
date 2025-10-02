@@ -26,6 +26,8 @@
                             <i class="fas fa-exclamation-triangle me-2"></i>Los campos código de barras y número de tarima son obligatorios.
                         <?php elseif ($error === 'update_failed'): ?>
                             <i class="fas fa-exclamation-triangle me-2"></i>Error al actualizar la tarima.
+                        <?php else: ?>
+                            <i class="fas fa-exclamation-triangle me-2"></i><?= htmlspecialchars($error ?? 'Error desconocido al actualizar la tarima.'); ?>
                         <?php endif; ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -44,6 +46,8 @@
                             <i class="fas fa-exclamation-triangle me-2"></i>Los campos código de barras y número de tarima son obligatorios.
                         <?php elseif ($_GET['error'] === 'update_failed'): ?>
                             <i class="fas fa-exclamation-triangle me-2"></i>Error al actualizar la tarima.
+                        <?php else: ?>
+                            <i class="fas fa-exclamation-triangle me-2"></i><?= htmlspecialchars($_GET['error'] ?? 'Error desconocido al actualizar la tarima.'); ?>
                         <?php endif; ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -60,7 +64,7 @@
                     <form method="POST" action="<?= BASE_URL ?>/tarimas/actualizar_tarima/<?= $tarima['id_tarima']; ?>">
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                            <input type="number" class="form-control" id="codigoBarras" name="codigoBarras" value="<?= htmlspecialchars($tarima['codigo_barras']); ?>" required step="1" oninput="limitLength(this, 30)">
+                            <input type="number" class="form-control" id="codigoBarras" name="codigoBarras" value="<?= htmlspecialchars($tarima['codigo_barras'] ?? ''); ?>" required step="1" oninput="limitLength(this, 30)">
                             <div class="invalid-feedback">
                                 El código de barras es requerido y debe tener máximo 30 dígitos.
                             </div>
@@ -68,7 +72,7 @@
 
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                            <input type="number" class="form-control" id="numeroProducto" name="numeroProducto" value="<?= htmlspecialchars($tarima['numero_producto']); ?>" required step="1" oninput="limitLength(this, 6)">
+                            <input type="number" class="form-control" id="numeroProducto" name="numeroProducto" value="<?= htmlspecialchars($tarima['numero_producto'] ?? ''); ?>" required step="1" oninput="limitLength(this, 6)">
                             <div class="invalid-feedback">
                                 El número de producto es requerido y debe tener máximo 6 dígitos.
                             </div>
@@ -76,7 +80,7 @@
 
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text"><i class="fas fa-warehouse"></i></span>
-                            <input type="number" class="form-control" id="numeroTarima" name="numeroTarima" value="<?= htmlspecialchars($tarima['numero_tarima']); ?>" required step="1" oninput="limitLength(this, 6)">
+                            <input type="number" class="form-control" id="numeroTarima" name="numeroTarima" value="<?= htmlspecialchars($tarima['numero_tarima'] ?? ''); ?>" required step="1" oninput="limitLength(this, 6)">
                             <div class="invalid-feedback">
                                 El número de tarima es requerido y debe tener máximo 6 dígitos.
                             </div>
@@ -84,7 +88,7 @@
 
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            <input type="number" class="form-control" id="numeroUsuario" name="numeroUsuario" value="<?= htmlspecialchars($tarima['numero_usuario']); ?>" required step="1" oninput="limitLength(this, 2)">
+                            <input type="number" class="form-control" id="numeroUsuario" name="numeroUsuario" value="<?= htmlspecialchars($tarima['numero_usuario'] ?? ''); ?>" required step="1" oninput="limitLength(this, 2)">
                             <div class="invalid-feedback">
                                 El número de usuario es requerido y debe tener máximo 2 dígitos.
                             </div>
@@ -94,7 +98,7 @@
                             <div class="col-md-6">
                                 <div class="input-group has-validation mb-3">
                                     <span class="input-group-text"><i class="fas fa-boxes"></i></span>
-                                    <input type="number" class="form-control" id="cantidadCajas" name="cantidadCajas" value="<?= htmlspecialchars($tarima['cantidad_cajas']); ?>" required min="1" max="999" step="1" oninput="limitLength(this, 3)">
+                                    <input type="number" class="form-control" id="cantidadCajas" name="cantidadCajas" value="<?= htmlspecialchars($tarima['cantidad_cajas'] ?? ''); ?>" required min="1" max="999" step="1" oninput="limitLength(this, 3)">
                                     <div class="invalid-feedback">
                                         La cantidad debe ser entre 1 y 999.
                                     </div>
@@ -103,7 +107,7 @@
                             <div class="col-md-6">
                                 <div class="input-group has-validation mb-3">
                                     <span class="input-group-text"><i class="fas fa-weight"></i></span>
-                                    <input type="number" class="form-control" id="peso" name="peso" value="<?= htmlspecialchars($tarima['peso']); ?>" min="0" max="9999.99" step="0.01">
+                                    <input type="number" class="form-control" id="peso" name="peso" value="<?= htmlspecialchars($tarima['peso'] ?? ''); ?>" min="0" max="9999.99" step="0.01">
                                     <div class="invalid-feedback">
                                         El peso debe ser entre 0 y 9999.99.
                                     </div>
@@ -115,7 +119,7 @@
                             <div class="col-md-6">
                                 <div class="input-group has-validation mb-3">
                                     <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                    <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" value="<?= htmlspecialchars($tarima['numero_venta']); ?>" required pattern="25-\d{6}">
+                                    <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" value="<?= htmlspecialchars($tarima['numero_venta'] ?? ''); ?>" required pattern="25-\d{6}">
                                     <div class="invalid-feedback">
                                         El número de venta debe seguir el formato 25-XXXXXX (25- seguido de 6 dígitos).
                                     </div>
