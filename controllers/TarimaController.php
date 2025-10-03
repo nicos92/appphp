@@ -25,6 +25,7 @@ class TarimaController extends Controller {
         
         $data = [
             'username' => $_SESSION['username'],
+            'title' => 'Nueva Tarima',
             'success' => $_GET['success'] ?? null,
             'error' => $_GET['error'] ?? null
         ];
@@ -146,6 +147,7 @@ class TarimaController extends Controller {
         
         $data = [
             'username' => $_SESSION['username'],
+            'title' => 'Inventario de Tarimas',
             'tarimas' => $tarimas,
             'role' => $_SESSION['role'] ?? 'produccion',
             'filtros' => $filtros
@@ -177,6 +179,7 @@ class TarimaController extends Controller {
         
         $data = [
             'username' => $_SESSION['username'],
+            'title' => 'Editar Tarima',
             'tarima' => $tarima,
             'role' => $_SESSION['role']
         ];
@@ -217,6 +220,7 @@ class TarimaController extends Controller {
             
             $data = [
                 'username' => $_SESSION['username'],
+                'title' => 'Editar Tarima',
                 'tarima' => $tarima,
                 'role' => $_SESSION['role'],
                 'error' => 'required_fields_missing'
@@ -253,6 +257,7 @@ class TarimaController extends Controller {
             
             $data = [
                 'username' => $_SESSION['username'],
+                'title' => 'Editar Tarima',
                 'tarima' => $tarima,
                 'role' => $_SESSION['role'],
                 'success' => 'tarima_actualizada'
@@ -267,6 +272,7 @@ class TarimaController extends Controller {
             
             $data = [
                 'username' => $_SESSION['username'],
+                'title' => 'Editar Tarima',
                 'tarima' => $tarima,
                 'role' => $_SESSION['role'],
                 'error' => 'update_failed'

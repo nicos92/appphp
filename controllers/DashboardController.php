@@ -37,6 +37,7 @@ class DashboardController extends Controller {
         
         $data = [
             'username' => $_SESSION['username'],
+            'title' => 'Panel de Control',
             'success' => $_GET['success'] ?? null,
             'total_tarimas' => $totalTarimas,
             'tarimas_activas' => "",
@@ -63,6 +64,7 @@ class DashboardController extends Controller {
         
         $data = [
             'username' => $_SESSION['username'],
+            'title' => 'Gestión de Usuarios',
             'role' => $_SESSION['role'],
             'usuarios' => $usuarios
         ];
@@ -98,6 +100,7 @@ class DashboardController extends Controller {
         
         $data = [
             'username' => $_SESSION['username'],
+            'title' => 'Editar Usuario',
             'role' => $_SESSION['role'],
             'usuario' => $usuario
         ];

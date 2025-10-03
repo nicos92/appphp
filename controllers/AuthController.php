@@ -18,7 +18,7 @@ class AuthController extends Controller {
             return;
         }
         
-        $this->view('auth/login', ['error' => $_GET['error'] ?? null]);
+        $this->view('auth/login', ['title' => 'Iniciar Sesión', 'error' => $_GET['error'] ?? null]);
     }
 
     public function login() {
@@ -79,6 +79,7 @@ class AuthController extends Controller {
         }
         
         $data = [
+            'title' => 'Registrar Usuario',
             'error' => $_GET['error'] ?? null,
             'success' => $_GET['success'] ?? null,
             'role' => $_SESSION['role'] ?? null
