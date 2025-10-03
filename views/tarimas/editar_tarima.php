@@ -155,7 +155,7 @@
 </div>
 
 <!-- Load the shared JavaScript file -->
-<script src="<?= BASE_URL ?>/assets/js/shared.js" onerror="console.error('Failed to load shared.js');"></script>
+<script src="<?= BASE_URL ?>/public/assets/js/shared.js" onerror="console.error('Failed to load shared.js');"></script>
 
 <!-- Fallback: include the function directly if external script fails -->
 <script>

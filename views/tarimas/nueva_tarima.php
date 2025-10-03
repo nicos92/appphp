@@ -15,12 +15,7 @@
 </header>
 
 <div class="container my-5">
-    <?php if (isset($success) && $success === 'entity_created'): ?>
-        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <i class="fas fa-check-circle me-2"></i>¡Tarima registrada correctamente!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
+
 
     <?php if (isset($error) && $error === 'required_fields_missing'): ?>
         <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
@@ -33,6 +28,12 @@
         <div class="col-lg-8">
             <div class="form-card">
                 <h3 class="mb-4">Formulario de Nueva Tarima</h3>
+                <?php if (isset($success) && $success === 'entity_created'): ?>
+                    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>¡Tarima registrada correctamente!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
                 <p class="text-muted mb-4">Complete los campos siguientes para registrar una nueva tarima en el sistema</p>
 
                 <form method="POST" action="<?= BASE_URL ?>/tarimas/guardar">
@@ -137,7 +138,7 @@
 </div>
 
 <!-- Load the shared JavaScript file -->
-<script src="<?= BASE_URL ?>/assets/js/shared.js" onerror="console.error('Failed to load shared.js');"></script>
+<script src="<?= BASE_URL ?>/public/assets/js/shared.js" onerror="console.error('Failed to load shared.js');"></script>
 
 <!-- Fallback: include the function directly if external script fails -->
 <script>
@@ -266,7 +267,7 @@
             cantidadCajas.focus();
             return false;
         }
-        
+
         if (numeroVenta && numeroVenta.value.length > 9) {
             e.preventDefault();
             alert('El número de venta no puede tener más de 9 caracteres.');
@@ -357,6 +358,17 @@
 
             // Set focus to numeroVenta field
             document.getElementById('numeroVenta').focus();
+        }
+    });
+
+    // Auto-close success message after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const successAlert = document.querySelector('.alert.alert-success');
+        if (successAlert) {
+            setTimeout(function() {
+                const alert = new bootstrap.Alert(successAlert);
+                alert.close();
+            }, 5000); // 5 seconds
         }
     });
 </script>
