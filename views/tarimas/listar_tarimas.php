@@ -90,11 +90,24 @@
         .btn,
         button,
         [class*="btn"],
-        .card-header,
         .card-body.border-bottom,
         .card-body:not(.p-0),
         .d-none.d-md-block .card .btn {
             display: none !important;
+        }
+        
+        /* Mostrar solo información específica en impresión */
+        .card-header {
+            display: block !important;
+            border: 1px solid #000 !important;
+        }
+        
+        /* Mostrar el badge con la información de tarimas del día */
+        .card-header .badge {
+            display: block !important;
+            background: #f8f9fa !important;
+            color: #000 !important;
+            border: 1px solid #000 !important;
         }
 
         /* Cabecera con estilos */
@@ -243,18 +256,23 @@
     </div>
 
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center no-print" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; ">
-            <h3 class="mb-0">Inventario de Tarimas</h3>
-            <div>
-                <a href="<?= BASE_URL ?>/tarimas/nueva_tarima" class="btn btn-light me-2 m-2">
-                    <i class="fas fa-plus me-2"></i>Nueva Tarima
-                </a>
-                <a href="<?= BASE_URL ?>/dashboard" class="btn btn-light m-2">
-                    <i class="fas fa-arrow-left me-2"></i>Volver al Panel
-                </a>
-                <button type="button" class="btn btn-light m-2" onclick="window.print()">
-                    <i class="fas fa-print me-2"></i>Imprimir
-                </button>
+        <div class="card-header d-flex flex-column align-items-start no-print" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; ">
+            <div class="d-flex justify-content-between w-100 align-items-center">
+                <h3 class="mb-0">Inventario de Tarimas</h3>
+                <div>
+                    <a href="<?= BASE_URL ?>/tarimas/nueva_tarima" class="btn btn-light me-2 m-2">
+                        <i class="fas fa-plus me-2"></i>Nueva Tarima
+                    </a>
+                    <a href="<?= BASE_URL ?>/dashboard" class="btn btn-light m-2">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al Panel
+                    </a>
+                    <button type="button" class="btn btn-light m-2" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Imprimir
+                    </button>
+                </div>
+            </div>
+            <div class="mt-2">
+                <span class="badge bg-warning text-dark">Tarimas ingresadas hoy: <strong><?= htmlspecialchars($tarimas_hoy ?? 0); ?></strong></span>
             </div>
         </div>
 

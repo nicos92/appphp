@@ -145,10 +145,14 @@ class TarimaController extends Controller {
             $tarimas = $this->tarimaModel->getTarimasFiltradas($filtros);
         }
         
+        // Obtener la cantidad de tarimas ingresadas hoy
+        $tarimasHoy = $this->tarimaModel->getTodayTarimasCount();
+        
         $data = [
             'username' => $_SESSION['username'],
             'title' => 'Inventario de Tarimas',
             'tarimas' => $tarimas,
+            'tarimas_hoy' => $tarimasHoy,
             'role' => $_SESSION['role'] ?? 'produccion',
             'filtros' => $filtros
         ];

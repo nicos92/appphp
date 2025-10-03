@@ -75,6 +75,13 @@ class Tarima {
         return $stmt->fetchColumn();
     }
     
+    public function getTodayTarimasCount() {
+        $today = date('Y-m-d');
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM vista_tarimas_con_legajo WHERE DATE(fecha_registro) = ?");
+        $stmt->execute([$today]);
+        return $stmt->fetchColumn();
+    }
+    
     public function getById($id) {
         $stmt = $this->db->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
         $stmt->execute([$id]);
