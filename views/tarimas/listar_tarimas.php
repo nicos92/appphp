@@ -15,135 +15,159 @@
 </header>
 
 <style>
-@media print {
-    /* Estilos para vista de impresión */
-    body * {
-        visibility: hidden;
-    }
-    
-    /* Mostrar solo el contenido de la tabla y encabezados */
-    .container.my-5,
-    .container.my-5 *,
-    .table-responsive,
-    .table,
-    .table thead,
-    .table tbody,
-    .table tr,
-    .table th,
-    .table td {
-        visibility: visible;
-    }
-    
-    /* Posicionar la tabla en la parte superior del documento impreso */
-    .container.my-5 {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 8px;
-    }
-    
-    .table-responsive {
-        overflow: visible;
-    }
-    
-    /* Asegurar formato A4 */
-    @page {
-        size: A4;
-        margin: 15mm;
-    }
-    
-    /* Estilos de tabla para impresión */
-    table {
-        width: 100% !important;
-        border-collapse: collapse;
-        font-size: 10pt;
-    }
-    
-    th, td {
-        border: 1px solid #000 !important;
-        padding: 6px 4px;
-        text-align: left;
-        word-wrap: break-word;
-    }
-    
-    /* Ocultar botones de acciones en impresión */
-    .btn,
-    button,
-    [class*="btn"] {
-        display: none !important;
-    }
-    
-    /* Cabecera con estilos */
-    thead tr {
-        background-color: #667eea !important;
-        color: white !important;
-    }
-    
-    /* Mostrar solo la tabla principal */
-    .card,
-    .card-header,
-    .card-body {
-        box-shadow: none !important;
-        border: none !important;
-        background: white !important;
-    }
-    
-    /* Ajustar el ancho de las columnas */
-    table {
-        page-break-inside: auto;
-    }
-    
-    tr {
-        page-break-inside: avoid;
-        page-break-after: auto;
-    }
-    
-    thead {
-        display: table-header-group;
-    }
-    
-    tfoot {
-        display: table-footer-group;
-    }
-    
-    /* Ocultar elementos que no deben imprimirse */
-    .no-print,
-    .no-print * {
-        display: none !important;
-    }
-}
+    @media print {
+        /* Estilos para vista de impresión */
+        body * {
+            visibility: hidden;
+        }
 
-/* Mostrar filtros aplicados en la impresión */
-@media print {
-    .print-filters {
-        visibility: visible;
-        position: static;
-        font-size: 10pt;
-        margin-bottom: 8px;
-        padding: 8px;
-        border: 1px solid #ccc;
-        background-color: #f9f9f9;
+        /* Mostrar solo el contenido de la tabla y encabezados */
+        .container.my-5,
+        .container.my-5 *,
+        .table-responsive,
+        .table,
+        .table thead,
+        .table tbody,
+        .table tr,
+        .table th,
+        .table td,
+        .print-filters {
+            visibility: visible;
+        }
+
+        /* Estilo para body durante la impresión */
+        body {
+            visibility: visible;
+            background: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Posicionar la tabla en la parte superior del documento impreso */
+        .container.my-5 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            min-width: 100% !important;
+            margin: 0 !important;
+            padding: 15mm !important;
+        }
+
+        .table-responsive {
+            overflow: visible !important;
+            width: 100% !important;
+            min-width: 100% !important;
+            display: block !important;
+        }
+
+        /* Asegurar formato A4 */
+        @page {
+            size: A4;
+            margin: 1mm;
+        }
+
+        /* Estilos de tabla para impresión */
+        table {
+            width: 100% !important;
+            min-width: 100% !important;
+            border-collapse: collapse;
+            font-size: 8pt;
+            table-layout: auto; /* Changed from fixed to auto for better column distribution */
+        }
+
+        th,
+        td {
+            border: 1px solid #000 !important;
+            padding: 6px 4px !important;
+            text-align: left;
+            word-wrap: break-word;
+            vertical-align: top;
+            width: auto !important; /* Allow columns to adjust automatically */
+        }
+
+        /* Ocultar botones de acciones en impresión */
+        .btn,
+        button,
+        [class*="btn"],
+        .card-header,
+        .card-body.border-bottom,
+        .card-body:not(.p-0) {
+            display: none !important;
+        }
+
+        /* Cabecera con estilos */
+        thead tr {
+            background-color: #667eea !important;
+            color: white !important;
+        }
+
+        /* Mostrar solo la tabla principal */
+        .card,
+        .card-body {
+            box-shadow: none !important;
+            border: none !important;
+            background: white !important;
+            padding: 0 !important;
+            width: 100% !important;
+            min-width: 100% !important;
+        }
+
+        /* Ajustar el ancho de las columnas */
+        table {
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tfoot {
+            display: table-footer-group;
+        }
+
+        /* Ocultar elementos que no deben imprimirse */
+        .no-print,
+        .no-print * {
+            display: none !important;
+        }
     }
-    
-    .print-filters h4 {
-        margin: 0 0 10px 0;
-        font-size: 10pt;
-        border-bottom: 1px solid #000;
-        padding-bottom: 5px;
+
+    /* Mostrar filtros aplicados en la impresión */
+    @media print {
+        .print-filters {
+            visibility: visible;
+            position: static;
+            font-size: 8pt;
+            margin-bottom: 8px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            width: 100% !important;
+        }
+
+        .print-filters h4 {
+            margin: 0 0 10px 0;
+            font-size: 8pt;
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+        }
+
+        .print-filters ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .print-filters li {
+            margin: 3px 0;
+        }
     }
-    
-    .print-filters ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-    
-    .print-filters li {
-        margin: 3px 0;
-    }
-}
 </style>
 
 <div class="container my-5">
@@ -180,7 +204,7 @@
             <?php endif; ?>
         </ul>
     </div>
-    
+
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center no-print" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; ">
             <h3 class="mb-0">Inventario de Tarimas</h3>
