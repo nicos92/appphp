@@ -107,7 +107,7 @@
                             <div class="col-md-6">
                                 <div class="input-group has-validation mb-3">
                                     <span class="input-group-text"><i class="fas fa-weight"></i></span>
-                                    <input type="number" class="form-control" id="peso" name="peso" value="<?= htmlspecialchars($tarima['peso'] ?? ''); ?>" min="0" max="9999.99" step="0.01">
+                                    <input type="number" class="form-control" id="peso" name="peso" value="<?= htmlspecialchars($tarima['peso'] ?? ''); ?>" min="0" max="9999.99" step="0.01" oninput="limitLength(this, 7)">
                                     <div class="invalid-feedback">
                                         El peso debe ser entre 0 y 9999.99.
                                     </div>
@@ -119,7 +119,7 @@
                             <div class="col-md-6">
                                 <div class="input-group has-validation mb-3">
                                     <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                    <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" value="<?= htmlspecialchars($tarima['numero_venta'] ?? ''); ?>" required pattern="25-\d{6}">
+                                    <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" value="<?= htmlspecialchars($tarima['numero_venta'] ?? ''); ?>" required pattern="25-\d{6}" oninput="limitLength(this, 9)">
                                     <div class="invalid-feedback">
                                         El número de venta debe seguir el formato 25-XXXXXX (25- seguido de 6 dígitos).
                                     </div>
@@ -154,35 +154,160 @@
     </div>
 </div>
 
-<script>
-    function limitLength(input, maxLength) {
-        // Get the value as a string
-        let value = input.value.toString();
+<!-- Load the shared JavaScript file -->
+<script src="<?= BASE_URL ?>/assets/js/shared.js" onerror="console.error('Failed to load shared.js');"></script>
 
-        // For number inputs, only allow digits
+<!-- Fallback: include the function directly if external script fails -->
+<script>
+    // Check if function exists, if not define it as fallback
+    if (typeof limitLength === 'undefined') {
+        function limitLength(input, maxLength) {
+            // Get the value as a string
+            let value = input.value.toString();
+
+            // For number inputs, only allow digits
+            if (input.type === 'number') {
+                value = value.replace(/[^0-9]/g, '');
+            }
+
+            // For text inputs like numeroVenta, allow digits and hyphen
+            if (input.id === 'numeroVenta') {
+                value = value.replace(/[^0-9\-]/g, '');
+            }
+
+            // For number inputs, check against max value instead of length
+            if (input.id === 'numeroProducto' && value.length > maxLength) {
+                value = value.substring(0, maxLength);
+            } else if (input.id === 'numeroTarima' && value.length > maxLength) {
+                value = value.substring(0, maxLength);
+            } else if (input.id === 'numeroUsuario' && value.length > maxLength) {
+                value = value.substring(0, maxLength);
+            } else if (input.id === 'cantidadCajas' && value.length > maxLength) {
+                value = value.substring(0, maxLength);
+            } else if (input.id === 'peso') {
+                // For peso, also ensure it doesn't exceed 9999.99
+                const numValue = parseFloat(value);
+                if (!isNaN(numValue) && numValue > 9999.99) {
+                    value = '9999.99';
+                }
+            } else if (input.id === 'numeroVenta' && value.length > maxLength) {
+                value = value.substring(0, maxLength);
+            }
+
+            // Set the value back to the input
+            input.value = value;
+        }
+    }
+
+    // Add event listeners to number inputs to enforce length limits (for consistency with nueva_tarima.php)
+    document.getElementById('codigoBarras') && document.getElementById('codigoBarras').addEventListener('input', function() {
+        let value = this.value.toString();
+        // Only allow digits
         value = value.replace(/[^0-9]/g, '');
 
-        // For number inputs, check against max value instead of length
-        if (input.id === 'numeroProducto' && value.length > maxLength) {
-            value = value.substring(0, maxLength);
-        } else if (input.id === 'numeroTarima' && value.length > maxLength) {
-            value = value.substring(0, maxLength);
-        } else if (input.id === 'numeroUsuario' && value.length > maxLength) {
-            value = value.substring(0, maxLength);
-        } else if (input.id === 'cantidadCajas' && value.length > maxLength) {
-            value = value.substring(0, maxLength);
-        } else if (input.id === 'peso') {
-            // For peso, also ensure it doesn't exceed 9999.99
-            const numValue = parseFloat(value);
-            if (!isNaN(numValue) && numValue > 9999.99) {
-                value = '9999.99';
+        // Check if input is longer than 30 digits
+        if (value.length > 30) {
+            value = value.substring(0, 30);
+        }
+
+        // Update the input value
+        this.value = value;
+    });
+
+    // Also validate on form submission (similar to nueva_tarima.php)
+    document.querySelector('form') && document.querySelector('form').addEventListener('submit', function(e) {
+        const codigoBarras = document.getElementById('codigoBarras');
+        if (codigoBarras) {
+            const codigoBarrasValue = codigoBarras.value;
+
+            if (codigoBarrasValue.length > 30) {
+                e.preventDefault();
+                alert('El código de barras no puede tener más de 30 dígitos.');
+                codigoBarras.focus();
+                return false;
+            }
+
+            // Validate barcode structure (similar to nueva_tarima.php)
+            if (codigoBarrasValue.length === 30) {
+                if (codigoBarrasValue.charAt(0) !== '0') {
+                    e.preventDefault();
+                    alert('El código de barras debe iniciar con 0');
+                    codigoBarras.focus();
+                    return false;
+                }
+
+                if (codigoBarrasValue.substring(13, 17) !== "9998") {
+                    e.preventDefault();
+                    alert('El código de barras no pertenece a una tarima (debe tener "9998" en posiciones 14-17)');
+                    codigoBarras.focus();
+                    return false;
+                }
             }
         }
 
-        // Set the value back to the input
-        input.value = value;
-    }
-    
+        const numeroProducto = document.getElementById('numeroProducto');
+        if (numeroProducto && numeroProducto.value.length > 6) {
+            e.preventDefault();
+            alert('El número de producto no puede tener más de 6 dígitos.');
+            numeroProducto.focus();
+            return false;
+        }
+
+        const numeroTarima = document.getElementById('numeroTarima');
+        if (numeroTarima && numeroTarima.value.length > 6) {
+            e.preventDefault();
+            alert('El número de tarima no puede tener más de 6 dígitos.');
+            numeroTarima.focus();
+            return false;
+        }
+
+        const numeroUsuario = document.getElementById('numeroUsuario');
+        if (numeroUsuario && numeroUsuario.value.length > 2) {
+            e.preventDefault();
+            alert('El número de usuario no puede tener más de 2 dígitos.');
+            numeroUsuario.focus();
+            return false;
+        }
+
+        const cantidadCajas = document.getElementById('cantidadCajas');
+        if (cantidadCajas && cantidadCajas.value.length > 3) {
+            e.preventDefault();
+            alert('La cantidad de cajas no puede tener más de 3 dígitos.');
+            cantidadCajas.focus();
+            return false;
+        }
+
+        const numeroVenta = document.getElementById('numeroVenta');
+        if (numeroVenta && numeroVenta.value.length > 9) {
+            e.preventDefault();
+            alert('El número de venta no puede tener más de 9 caracteres.');
+            numeroVenta.focus();
+            return false;
+        }
+
+        const peso = document.getElementById('peso');
+        if (peso) {
+            const pesoFloat = parseFloat(peso.value);
+            if (pesoFloat > 9999.99) {
+                e.preventDefault();
+                alert('El peso no puede ser mayor a 9999.99.');
+                peso.focus();
+                return false;
+            }
+        }
+
+        // Validate venta number format
+        if (numeroVenta) {
+            const ventaRegex = /^25-\d{6}$/;
+            if (!ventaRegex.test(numeroVenta.value)) {
+                e.preventDefault();
+                alert('El número de venta debe seguir el formato 25-XXXXXX (25- seguido de 6 dígitos).');
+                numeroVenta.focus();
+                return false;
+            }
+        }
+    });
+
     // Auto-close success message after 5 seconds
     document.addEventListener('DOMContentLoaded', function() {
         const successAlert = document.querySelector('.alert.alert-success');
