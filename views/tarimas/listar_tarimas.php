@@ -41,7 +41,7 @@
         top: 0;
         width: 100%;
         margin: 0;
-        padding: 20px;
+        padding: 8px;
     }
     
     .table-responsive {
@@ -121,8 +121,8 @@
         visibility: visible;
         position: static;
         font-size: 10pt;
-        margin-bottom: 15px;
-        padding: 10px;
+        margin-bottom: 8px;
+        padding: 8px;
         border: 1px solid #ccc;
         background-color: #f9f9f9;
     }
@@ -176,7 +176,7 @@
                 <li><strong>Cant. Cajas:</strong> <?= htmlspecialchars($filtros['cantidad_cajas_min']); ?></li>
             <?php endif; ?>
             <?php if (!empty($filtros['peso_min'])): ?>
-                <li><strong>Peso Neto:</strong> <?= htmlspecialchars($filtros['peso_min']); ?></li>
+                <li><strong>Peso:</strong> <?= htmlspecialchars($filtros['peso_min']); ?></li>
             <?php endif; ?>
         </ul>
     </div>
@@ -240,7 +240,7 @@
                 </div>
                 <div class="row g-3 mt-2">
                     <div class="col-md-3">
-                        <label for="peso_min" class="form-label">Peso Neto</label>
+                        <label for="peso_min" class="form-label">Peso</label>
                         <input type="number" step="0.01" class="form-control" id="peso_min" name="peso_min" value="<?= htmlspecialchars($filtros['peso_min'] ?? ''); ?>" placeholder="Mínimo">
                     </div>
                 </div>
@@ -269,7 +269,7 @@
                             <th>Tarima</th>
                             <th>Usuario</th>
                             <th>Cajas</th>
-                            <th>Peso Neto</th>
+                            <th>Peso</th>
                             <th>Venta</th>
                             <th>Legajo</th>
                             <th>Nombre</th>
