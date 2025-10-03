@@ -92,7 +92,8 @@
         [class*="btn"],
         .card-header,
         .card-body.border-bottom,
-        .card-body:not(.p-0) {
+        .card-body:not(.p-0),
+        .d-none.d-md-block .card .btn {
             display: none !important;
         }
 
@@ -111,6 +112,38 @@
             padding: 0 !important;
             width: 100% !important;
             min-width: 100% !important;
+        }
+        
+        /* Show card elements during printing */
+        .d-none.d-xl-block {
+            display: block !important;
+        }
+        
+        .d-none.d-xl-block .row {
+            display: block !important;
+        }
+        
+        .d-none.d-xl-block .table-responsive {
+            display: table !important;
+            width: 100% !important;
+        }
+        
+        .d-xl-none .row {
+            display: block !important;
+        }
+        
+        .d-xl-none .col-12,
+        .d-xl-none .col-sm-12,
+        .d-xl-none .col-md-4,
+        .d-xl-none .col-lg-3 {
+            display: block !important;
+            width: 100% !important;
+            margin-bottom: 15px;
+        }
+        
+        .d-xl-none .card {
+            display: block !important;
+            border: 1px solid #000 !important;
         }
 
         /* Ajustar el ancho de las columnas */
@@ -134,6 +167,10 @@
         /* Ocultar elementos que no deben imprimirse */
         .no-print,
         .no-print * {
+            display: none !important;
+        }
+        
+        .d-xl-none {
             display: none !important;
         }
     }
@@ -270,10 +307,10 @@
                 </div>
                 <div class="row g-3 mt-3">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary me-2">
+                        <button type="submit" class="btn btn-primary m-2">
                             <i class="fas fa-search me-2"></i>Filtrar
                         </button>
-                        <button type="button" class="btn btn-outline-secondary me-2" onclick="limpiarFiltros()">
+                        <button type="button" class="btn btn-outline-secondary m-2" onclick="limpiarFiltros()">
                             <i class="fas fa-eraser me-2"></i>Limpiar Filtros
                         </button>
                         <a href="<?= BASE_URL ?>/tarimas?all=1" class="btn btn-success">
@@ -285,7 +322,8 @@
         </div>
 
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <!-- Table view for large and extra large screens -->
+            <div class="table-responsive d-none d-xl-block">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
@@ -334,6 +372,47 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Card view for smaller screens -->
+            <div class="d-xl-none">
+                <?php if (!empty($tarimas)): ?>
+                    <div class="row g-3 p-3">
+                        <?php foreach ($tarimas as $tarima): ?>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-3">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <h5 class="card-title">
+                                                <span class="badge bg-primary">Tarima: <?= htmlspecialchars($tarima['numero_tarima']); ?></span>
+                                            </h5>
+                                            <?php if (isset($role) && ($role === 'administrador' || $role === 'jefe_produccion')): ?>
+                                                <a href="<?= BASE_URL ?>/tarimas/editar_tarima/<?= $tarima['id_tarima']; ?>" class="btn btn-sm btn-outline-warning no-print" title="Editar tarima">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="card-text">
+                                            <p class="mb-1"><strong>Producto:</strong> <?= htmlspecialchars($tarima['numero_producto'] ?? ''); ?></p>
+                                            <p class="mb-1"><strong>Usuario:</strong> <?= htmlspecialchars($tarima['numero_usuario']); ?></p>
+                                            <p class="mb-1"><strong>Cajas:</strong> <?= htmlspecialchars($tarima['cantidad_cajas']); ?></p>
+                                            <p class="mb-1"><strong>Peso:</strong> <?= htmlspecialchars($tarima['peso']); ?></p>
+                                            <p class="mb-1"><strong>Venta:</strong> <?= htmlspecialchars($tarima['numero_venta']); ?></p>
+                                            <p class="mb-1"><strong>Legajo:</strong> <?= htmlspecialchars($tarima['legajo'] ?? 'N/A'); ?></p>
+                                            <p class="mb-1"><strong>Nombre:</strong> <?= htmlspecialchars($tarima['nombre_usuario'] ?? 'N/A'); ?></p>
+                                            <p class="mb-1"><strong>Fecha:</strong> <?= htmlspecialchars($tarima['fecha_registro']); ?></p>
+                                            <p class="mb-1"><strong>Descripción:</strong> <?= htmlspecialchars($tarima['descripcion'] ?? ''); ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="p-3">
+                        <p class="text-center text-muted">No hay tarimas registradas aún.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
