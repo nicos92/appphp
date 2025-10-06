@@ -16,6 +16,7 @@
 
 <style>
     @media print {
+
         /* Estilos para vista de impresión */
         body * {
             visibility: hidden;
@@ -73,7 +74,8 @@
             min-width: 100% !important;
             border-collapse: collapse;
             font-size: 8pt;
-            table-layout: auto; /* Changed from fixed to auto for better column distribution */
+            table-layout: auto;
+            /* Changed from fixed to auto for better column distribution */
         }
 
         th,
@@ -83,7 +85,8 @@
             text-align: left;
             word-wrap: break-word;
             vertical-align: top;
-            width: auto !important; /* Allow columns to adjust automatically */
+            width: auto !important;
+            /* Allow columns to adjust automatically */
         }
 
         /* Ocultar botones de acciones en impresión */
@@ -95,13 +98,13 @@
         .d-none.d-md-block .card .btn {
             display: none !important;
         }
-        
+
         /* Mostrar solo información específica en impresión */
         .card-header {
             display: block !important;
             border: 1px solid #000 !important;
         }
-        
+
         /* Mostrar el badge con la información de tarimas del día */
         .card-header .badge {
             display: block !important;
@@ -126,25 +129,25 @@
             width: 100% !important;
             min-width: 100% !important;
         }
-        
+
         /* Show card elements during printing */
         .d-none.d-xl-block {
             display: block !important;
         }
-        
+
         .d-none.d-xl-block .row {
             display: block !important;
         }
-        
+
         .d-none.d-xl-block .table-responsive {
             display: table !important;
             width: 100% !important;
         }
-        
+
         .d-xl-none .row {
             display: block !important;
         }
-        
+
         .d-xl-none .col-12,
         .d-xl-none .col-sm-12,
         .d-xl-none .col-md-4,
@@ -153,7 +156,7 @@
             width: 100% !important;
             margin-bottom: 15px;
         }
-        
+
         .d-xl-none .card {
             display: block !important;
             border: 1px solid #000 !important;
@@ -182,7 +185,7 @@
         .no-print * {
             display: none !important;
         }
-        
+
         .d-xl-none {
             display: none !important;
         }
@@ -271,8 +274,9 @@
                     </button>
                 </div>
             </div>
-            <div class="mt-2">
-                <span class="badge bg-warning text-dark">Tarimas ingresadas hoy: <strong><?= htmlspecialchars($tarimas_hoy ?? 0); ?></strong></span>
+            <div class="mt-2 d-flex flex-wrap gap-2">
+                <span class="badge text-bg-warning">Tarimas ingresadas hoy: <strong><?= htmlspecialchars($tarimas_hoy ?? 0); ?></strong></span>
+                <span class="badge text-bg-info">Tarimas mostradas: <strong><?= count($tarimas ?? []); ?></strong></span>
             </div>
         </div>
 
@@ -391,7 +395,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <!-- Card view for smaller screens -->
             <div class="d-xl-none">
                 <?php if (!empty($tarimas)): ?>
