@@ -282,8 +282,14 @@
 
         <!-- Sección de filtrado -->
         <div class="card-body border-bottom no-print">
-            <h5 class="mb-3"><i class="fas fa-filter me-2"></i>Filtros de Búsqueda</h5>
-            <form id="filtroTarimas" method="GET" action="<?= BASE_URL ?>/tarimas">
+            <h5 class="mb-3" data-bs-toggle="collapse" href="#filtroTarimas" role="button" aria-expanded="false" aria-controls="filtroTarimas">
+                <i class="fas fa-filter me-2"></i>
+                Filtros de Búsqueda
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4" />
+                </svg>
+            </h5>
+            <form id="filtroTarimas" class="collapse" method="GET" action="<?= BASE_URL ?>/tarimas">
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label for="numero_producto" class="form-label">Producto</label>
