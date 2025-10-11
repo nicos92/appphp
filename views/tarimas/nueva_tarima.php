@@ -34,6 +34,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
+
+                <?php if (isset($error) && $error === 'duplicate_tarima'): ?>
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Ya existe una tarima registrada con este código de barras en la misma fecha.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
                 <p class="text-muted mb-4">Complete los campos siguientes para registrar una nueva tarima en el sistema</p>
 
                 <form method="POST" action="<?= BASE_URL ?>/tarimas/guardar">

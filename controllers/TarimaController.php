@@ -3,37 +3,41 @@
 require_once __DIR__ . '/Controller.php';
 require_once __DIR__ . '/../models/Tarima.php';
 
-class TarimaController extends Controller {
+class TarimaController extends Controller
+{
     private $tarimaModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->tarimaModel = new Tarima();
     }
 
-    public function nuevaTarima() {
+    public function nuevaTarima()
+    {
         if (!$this->isLoggedIn()) {
             $this->redirect('auth/login');
             return;
         }
-        
+
         // Solo usuarios con permiso para crear tarimas pueden acceder
         if (!$this->hasAnyRole(['administrador', 'produccion', 'jefe_produccion'])) {
             $this->redirect('auth/login');
             return;
         }
-        
+
         $data = [
             'username' => $_SESSION['username'],
             'title' => 'Nueva Tarima',
             'success' => $_GET['success'] ?? null,
             'error' => $_GET['error'] ?? null
         ];
-        
+
         $this->view('tarimas/nueva_tarima', $data);
     }
 
-    public function guardarTarima() {
+    public function guardarTarima()
+    {
         if (!$this->isLoggedIn()) {
             $this->redirect('auth/login');
             return;
@@ -75,11 +79,11 @@ class TarimaController extends Controller {
             if (strlen($codigoBarras) >= 6) {
                 // Extraer los últimos 6 dígitos
                 $lastSixDigits = substr($codigoBarras, -6);
-                
+
                 // Los primeros 4 dígitos son la parte entera, los últimos 2 son decimales
                 $wholePart = substr($lastSixDigits, 0, 4);
                 $decimalPart = substr($lastSixDigits, 4, 2);
-                
+
                 $tarimaData['peso'] = (float)($wholePart . '.' . $decimalPart);
             }
         }
@@ -90,25 +94,37 @@ class TarimaController extends Controller {
             return;
         }
 
-        if ($this->tarimaModel->create($tarimaData)) {
-            $this->redirect('tarimas/nueva_tarima?success=entity_created');
-        } else {
-            $this->redirect('tarimas/nueva_tarima?error=save_failed');
+        try {
+            if ($this->tarimaModel->create($tarimaData)) {
+                $this->redirect('tarimas/nueva_tarima?success=entity_created');
+            } else {
+                $this->redirect('tarimas/nueva_tarima?error=save_failed');
+            }
+        } catch (PDOException $e) {
+            // Capturar error de duplicado
+            if ($e->getCode() === '23000' || strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                // Error de duplicado
+                header('Location: ' . BASE_URL . '/tarimas/nueva_tarima?error=duplicate_tarima');
+            } else {
+                // Otro error
+                header('Location: ' . BASE_URL . '/tarimas/nueva_tarima?error=unknown');
+            }
         }
     }
-    
-    public function listarTarimas() {
+
+    public function listarTarimas()
+    {
         if (!$this->isLoggedIn()) {
             $this->redirect('auth/login');
             return;
         }
-        
+
         // Solo usuarios con permiso para ver tarimas pueden acceder
         if (!$this->hasAnyRole(['administrador', 'produccion', 'jefe_produccion'])) {
             $this->redirect('auth/login');
             return;
         }
-        
+
         // Recoger parámetros de filtro
         $filtros = [
             'numero_producto' => $_GET['numero_producto'] ?? '',
@@ -121,7 +137,7 @@ class TarimaController extends Controller {
             'cantidad_cajas_min' => $_GET['cantidad_cajas_min'] ?? '',
             'peso_min' => $_GET['peso_min'] ?? ''
         ];
-        
+
         // Check if all filters are empty (no filter applied)
         $hasFilters = false;
         foreach ($filtros as $filtro) {
@@ -130,10 +146,10 @@ class TarimaController extends Controller {
                 break;
             }
         }
-        
+
         // Check if 'all' parameter is present to show last 1000 tarimas without date restriction
         $showAll = isset($_GET['all']) && $_GET['all'] === '1';
-        
+
         if ($showAll) {
             // Show last 1000 tarimas without date restriction
             $tarimas = $this->tarimaModel->getLastTarimas(1000);
@@ -144,10 +160,10 @@ class TarimaController extends Controller {
             // Filters applied, use the filtered method
             $tarimas = $this->tarimaModel->getTarimasFiltradas($filtros);
         }
-        
+
         // Obtener la cantidad de tarimas ingresadas hoy
         $tarimasHoy = $this->tarimaModel->getTodayTarimasCount();
-        
+
         $data = [
             'username' => $_SESSION['username'],
             'title' => 'Inventario de Tarimas',
@@ -156,53 +172,55 @@ class TarimaController extends Controller {
             'role' => $_SESSION['role'] ?? 'produccion',
             'filtros' => $filtros
         ];
-        
+
         $this->view('tarimas/listar_tarimas', $data);
     }
-    
-    public function editarTarima($id) {
+
+    public function editarTarima($id)
+    {
         if (!$this->isLoggedIn()) {
             $this->redirect('auth/login');
             return;
         }
-        
+
         // Solo administradores y jefes de producción pueden editar tarimas
         if (!$this->hasAnyRole(['administrador', 'jefe_produccion'])) {
             $this->redirect('tarimas/listar_tarimas');
             return;
         }
-        
+
         $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
         $stmt->execute([$id]);
         $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$tarima) {
             $this->redirect('tarimas/listar_tarimas');
             return;
         }
-        
+
         $data = [
             'username' => $_SESSION['username'],
             'title' => 'Editar Tarima',
             'tarima' => $tarima,
             'role' => $_SESSION['role']
         ];
-        
+
         $this->view('tarimas/editar_tarima', $data);
     }
-    
-    public function actualizarTarima($id) {
+
+    public function actualizarTarima($id)
+    {
         if (!$this->isLoggedIn()) {
             $this->redirect('auth/login');
             return;
         }
-        
+
         // Solo administradores y jefes de producción pueden actualizar tarimas
         if (!$this->hasAnyRole(['administrador', 'jefe_produccion'])) {
             $this->redirect('tarimas/listar_tarimas');
             return;
         }
-        
+
         $tarimaData = [
             'id' => $id,
             'codigoBarras' => filter_var(trim($_POST['codigoBarras']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
@@ -221,7 +239,7 @@ class TarimaController extends Controller {
             $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
             $stmt->execute([$id]);
             $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
-            
+
             $data = [
                 'username' => $_SESSION['username'],
                 'title' => 'Editar Tarima',
@@ -229,7 +247,7 @@ class TarimaController extends Controller {
                 'role' => $_SESSION['role'],
                 'error' => 'required_fields_missing'
             ];
-            
+
             $this->view('tarimas/editar_tarima', $data);
             return;
         }
@@ -240,7 +258,7 @@ class TarimaController extends Controller {
                 cantidad_cajas = ?, peso = ?, numero_venta = ?, descripcion = ?
             WHERE id_tarima = ?
         ");
-        
+
         $result = $stmt->execute([
             $tarimaData['codigoBarras'],
             $tarimaData['numeroProducto'],
@@ -252,13 +270,13 @@ class TarimaController extends Controller {
             $tarimaData['descripcion'],
             $tarimaData['id']
         ]);
-        
+
         if ($result) {
             // Recuperar la tarima actualizada para mostrarla en el formulario
             $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
             $stmt->execute([$id]);
             $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
-            
+
             $data = [
                 'username' => $_SESSION['username'],
                 'title' => 'Editar Tarima',
@@ -266,14 +284,14 @@ class TarimaController extends Controller {
                 'role' => $_SESSION['role'],
                 'success' => 'tarima_actualizada'
             ];
-            
+
             $this->view('tarimas/editar_tarima', $data);
         } else {
             // Recuperar la tarima para mostrarla en el formulario
             $stmt = $this->tarimaModel->getConnection()->prepare("SELECT * FROM tarimas WHERE id_tarima = ?");
             $stmt->execute([$id]);
             $tarima = $stmt->fetch(PDO::FETCH_ASSOC);
-            
+
             $data = [
                 'username' => $_SESSION['username'],
                 'title' => 'Editar Tarima',
@@ -281,7 +299,7 @@ class TarimaController extends Controller {
                 'role' => $_SESSION['role'],
                 'error' => 'update_failed'
             ];
-            
+
             $this->view('tarimas/editar_tarima', $data);
         }
     }
