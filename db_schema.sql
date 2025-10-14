@@ -1,9 +1,25 @@
--- ELIMINAR LA BASE DE DATOS SI YA EXISTE
-DROP DATABASE IF EXISTS gestiontarimas;
--- Script SQL para crear la base de datos de gestión de tarimas
--- Crear la base de datos
-CREATE DATABASE IF NOT EXISTS gestiontarimas;
+
+-- Establecer el delimitador temporalmente para crear el procedimiento/trigger sin conflictos.
+DELIMITER ;
+
+-- ====================================================================================
+-- 1. Creación y Configuración de la Base de Datos
+-- ====================================================================================
+-- Eliminar la base de datos si existe (opcional, útil para pruebas)
+-- DROP DATABASE IF EXISTS gestiontarimas;
+
+-- Crear la base de datos con el conjunto de caracteres y la intercalación deseada
+CREATE DATABASE IF NOT EXISTS gestiontarimas
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
 USE gestiontarimas;
+
+-- ====================================================================================
+-- 2. Creación de Tablas con Configuración utf8mb4
+-- NOTA: Se aplica CHARACTER SET utf8mb4 y COLLATE utf8mb4_unicode_ci a la tabla y
+-- a todas las columnas VARCHAR/TEXT para asegurar la compatibilidad total.
+-- ====================================================================================
 
 -- Crear la tabla de roles
 CREATE TABLE roles (
@@ -12,7 +28,7 @@ CREATE TABLE roles (
     descripcion TEXT,
     activo TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de permisos
 CREATE TABLE permisos (
@@ -22,7 +38,7 @@ CREATE TABLE permisos (
     modulo VARCHAR(50),
     activo TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla intermedia roles_permisos
 CREATE TABLE roles_permisos (
@@ -31,7 +47,7 @@ CREATE TABLE roles_permisos (
     PRIMARY KEY (id_rol, id_permiso),
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol) ON DELETE CASCADE,
     FOREIGN KEY (id_permiso) REFERENCES permisos(id_permiso) ON DELETE CASCADE
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de usuarios
 CREATE TABLE usuarios (
@@ -48,7 +64,7 @@ CREATE TABLE usuarios (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de tarimas
 CREATE TABLE tarimas (
@@ -63,14 +79,36 @@ CREATE TABLE tarimas (
     descripcion TEXT,
     id_usuario INT,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha DATE DEFAULT (CURRENT_DATE()),
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL ON UPDATE CASCADE
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE historial_tarimas (
+    id_historial_tarimas INT AUTO_INCREMENT PRIMARY KEY,
+    id_tarima_eliminada INT NOT NULL,
+    codigo_barras VARCHAR(30),
+    numero_producto VARCHAR(6),
+    numero_tarima VARCHAR(6),
+    numero_usuario VARCHAR(2),
+    cantidad_cajas INT,
+    peso DECIMAL(10,2),
+    numero_venta VARCHAR(10),
+    descripcion TEXT,
+    id_usuario INT,
+    fecha_registro TIMESTAMP,
+    fecha DATE,
+    fecha_eliminacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear índices para mejorar la velocidad de consulta
 CREATE INDEX idx_codigo_barras ON tarimas(codigo_barras);
 CREATE INDEX idx_numero_tarima ON tarimas(numero_tarima);
 CREATE INDEX idx_fecha_registro ON tarimas(fecha_registro);
 CREATE INDEX idx_id_usuario ON tarimas(id_usuario);
+
+-- ====================================================================================
+-- 3. Inserción de Datos Predeterminados
+-- ====================================================================================
 
 -- Insertar roles predeterminados
 INSERT INTO roles (nombre_rol, descripcion) VALUES
@@ -102,7 +140,7 @@ INSERT INTO roles_permisos (id_rol, id_permiso) VALUES
 (2, 1), -- crear_tarima
 (2, 2); -- ver_tarimas
 
--- Jefe de producción: crear, ver y editar tarimas
+-- Jefe de producción: crear, ver, editar y eliminar tarimas
 INSERT INTO roles_permisos (id_rol, id_permiso) VALUES 
 (3, 1), -- crear_tarima
 (3, 2), -- ver_tarimas
@@ -115,10 +153,13 @@ INSERT INTO usuarios (username, email, password, first_name, last_name, legajo, 
 
 -- Insertar una tarima de ejemplo
 INSERT INTO tarimas (codigo_barras, numero_producto, numero_tarima, numero_usuario, cantidad_cajas, peso, numero_venta, descripcion, id_usuario) VALUES
-('099999921296599980006045090774', '999999', '212965', '06', 45, 0907.74, '25-123456', 'Tarima de ejemplo creada con el código de barras completo', 1);
+('099999921296599980006045090774', '999999', '212965', '06', 45, 907.74, '25-123456', 'Tarima de ejemplo creada con el código de barras completo', 1);
 
-
+-- ====================================================================================
+-- 4. Creación de Vistas, Procedimientos Almacenados y Triggers
+-- ====================================================================================
 USE gestiontarimas;
+
 -- Crear vista para mostrar tarimas con información del usuario
 CREATE VIEW vista_tarimas_con_legajo AS
 SELECT 
@@ -136,9 +177,6 @@ SELECT
 FROM tarimas t 
 LEFT JOIN usuarios u ON t.id_usuario = u.id_usuario;
 
--- Actualizar procedimiento almacenado para filtrar tarimas por número de producto
-
-USE gestiontarimas;
 -- Eliminar el procedimiento existente
 DROP PROCEDURE IF EXISTS FiltrarTarimas;
 
@@ -185,4 +223,43 @@ BEGIN
     LIMIT 1000;
 END //
 
+USE gestiontarimas;
+
+DELIMITER //
+CREATE TRIGGER after_tarima_delete
+AFTER DELETE ON tarimas
+FOR EACH ROW
+BEGIN
+    INSERT INTO historial_tarimas (
+        id_tarima_eliminada,
+        codigo_barras,
+        numero_producto,
+        numero_tarima,
+        numero_usuario,
+        cantidad_cajas,
+        peso,
+        numero_venta,
+        descripcion,
+        id_usuario,
+        fecha_registro,
+        fecha
+    )
+    VALUES (
+        OLD.id_tarima,
+        OLD.codigo_barras,
+        OLD.numero_producto,
+        OLD.numero_tarima,
+        OLD.numero_usuario,
+        OLD.cantidad_cajas,
+        OLD.peso,
+        OLD.numero_venta,
+        OLD.descripcion,
+        OLD.id_usuario,
+        OLD.fecha_registro,
+        OLD.fecha
+    );
+    END //
+DELIMITER ;
+
+END //
 DELIMITER ;

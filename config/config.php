@@ -6,6 +6,7 @@ define('DB_USER', 'root');  // Ajusta según tu configuración
 define('DB_PASS', '340480_Nss@Salomon');      // Ajusta según tu configuración T440
 // define('DB_PASS', 'root');      // Ajusta según tu configuración SERVERU
 define('DB_NAME', 'gestiontarimas'); // Ajusta según tu nombre de base de datos
+define('DB_CHARSET', 'utf8mb4'); // Define el charset a usar
 
 // Security settings
 define('APP_NAME', 'Gestión de Tarimas');
