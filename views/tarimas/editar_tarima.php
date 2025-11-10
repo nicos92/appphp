@@ -119,7 +119,7 @@
                             <div class="col-md-6">
                                 <div class="input-group has-validation mb-3">
                                     <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                    <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" value="<?= htmlspecialchars($tarima['numero_venta'] ?? ''); ?>" required pattern="25-\d{6}" oninput="limitLength(this, 9)">
+                                    <input type="text" class="form-control" id="numeroVenta" name="numeroVenta" value="<?= htmlspecialchars($tarima['numero_venta'] ?? ''); ?>" required pattern="\d{2}-\d{6}" oninput="limitLength(this, 9)">
                                     <div class="invalid-feedback">
                                         El número de venta debe seguir el formato 25-XXXXXX (25- seguido de 6 dígitos).
                                     </div>
@@ -298,7 +298,7 @@
 
         // Validate venta number format
         if (numeroVenta) {
-            const ventaRegex = /^25-\d{6}$/;
+            const ventaRegex = /^\d{2}-\d{6}$/;
             if (!ventaRegex.test(numeroVenta.value)) {
                 e.preventDefault();
                 alert('El número de venta debe seguir el formato 25-XXXXXX (25- seguido de 6 dígitos).');
